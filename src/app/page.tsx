@@ -46,13 +46,16 @@ const defaultSCPICredit: SCPICreditConfig = {
 
 const defaultAV: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 4,
-  reinvestDividends: false, entryFees: 0, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
+  reinvestDividends: false, entryFees: 4, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
 };
 
 const defaultPER: EnvelopeConfig = {
   enabled: true, initialCapital: 5000, monthlyContribution: 150, rate: 4,
-  reinvestDividends: false, entryFees: 0, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
+  reinvestDividends: false, entryFees: 4, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
 };
+
+const AV_PER_ENTRY_FEES = 4; // 4% fixed entry fees
+const AV_PER_MGMT_FEES = 1; // 1% annual management fees
 
 const LIVRET_RATE = 1; // 1% livret bancaire classique for comparison
 const SCPI_REVALUATION = 1; // 1% annual part revaluation
@@ -135,18 +138,18 @@ function calcLoanPayment(principal: number, annualRate: number, years: number) {
 // ── Simulate cash SCPI / AV / PER ──
 function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "per") {
   const months = years * 12;
+  const isAVPER = type === "av" || type === "per";
+  const entryFeePct = isAVPER ? AV_PER_ENTRY_FEES / 100 : (type === "scpi" ? config.entryFees / 100 : 0);
+  const mgmtFeeMonthly = isAVPER ? AV_PER_MGMT_FEES / 100 / 12 : 0;
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = type === "scpi" ? SCPI_REVALUATION / 100 / 12 : 0;
-  let capital = config.initialCapital;
+  let capital = config.initialCapital * (1 - entryFeePct);
   let totalInvested = config.initialCapital;
-
-  if (type === "scpi") capital *= (1 - config.entryFees / 100);
 
   const dataPoints: number[] = [capital];
 
   for (let m = 1; m <= months; m++) {
-    let contribution = config.monthlyContribution;
-    if (type === "scpi") contribution *= (1 - config.entryFees / 100);
+    const contribution = config.monthlyContribution * (1 - entryFeePct);
     capital += contribution;
     totalInvested += config.monthlyContribution;
 
@@ -155,6 +158,11 @@ function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "
     // Yield (dividends / interest)
     const gains = capital * monthlyRate;
     capital += gains;
+
+    // Management fees (AV/PER: 1%/year deducted monthly)
+    if (isAVPER) {
+      capital *= (1 - mgmtFeeMonthly);
+    }
 
     // SCPI part revaluation (1%/year)
     if (type === "scpi") {
@@ -272,28 +280,35 @@ function EnvelopeCard({ title, color, config, onChange, type }: {
         <Toggle on={config.enabled} onToggle={() => set({ enabled: !config.enabled })} />
       </div>
       {config.enabled && (
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
-          <Field label="Versement mensuel" value={config.monthlyContribution} onChange={(v) => set({ monthlyContribution: v })} suffix="€/mois" />
-          <Field label="Rendement annuel" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
-          {type === "av" && (
-            <Field label="Prélèvements sociaux" value={config.socialCharges} onChange={(v) => set({ socialCharges: v })} suffix="%" tip="17.2% en France" />
-          )}
-          {type === "per" && (
-            <div className="col-span-2">
-              <label className="text-xs text-[var(--muted)] flex items-center mb-1">
-                TMI<Tip text="Tranche marginale d'imposition — détermine l'économie d'impôt" />
-              </label>
-              <div className="flex gap-2">
-                {TMI_OPTIONS.map((t) => (
-                  <button key={t} onClick={() => set({ tmi: t })}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${config.tmi === t ? "bg-[var(--accent)] text-white" : "bg-[var(--border)] text-[var(--muted)]"}`}>
-                    {t}%
-                  </button>
-                ))}
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 border border-indigo-500/20 rounded-lg px-3 py-2.5">
+            <span className="text-sm">✨</span>
+            <p className="text-[11px] text-indigo-200/80 leading-relaxed">
+              Rendement de <span className="font-semibold text-indigo-300">4% brut</span> optimisé grâce à un accompagnement personnalisé et un pilotage actif de votre épargne par votre conseiller en gestion de patrimoine.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
+            <Field label="Versement mensuel" value={config.monthlyContribution} onChange={(v) => set({ monthlyContribution: v })} suffix="€/mois" />
+            {type === "av" && (
+              <Field label="Prélèvements sociaux" value={config.socialCharges} onChange={(v) => set({ socialCharges: v })} suffix="%" tip="17.2% en France" />
+            )}
+            {type === "per" && (
+              <div className="col-span-2">
+                <label className="text-xs text-[var(--muted)] flex items-center mb-1">
+                  TMI<Tip text="Tranche marginale d'imposition — détermine l'économie d'impôt" />
+                </label>
+                <div className="flex gap-2">
+                  {TMI_OPTIONS.map((t) => (
+                    <button key={t} onClick={() => set({ tmi: t })}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${config.tmi === t ? "bg-[var(--accent)] text-white" : "bg-[var(--border)] text-[var(--muted)]"}`}>
+                      {t}%
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </div>
