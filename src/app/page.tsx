@@ -76,8 +76,8 @@ function calcLoanPayment(principal: number, annualRate: number, years: number) {
 function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "per") {
   const months = years * 12;
   const isAVPER = type === "av" || type === "per";
-  const entryFeePct = isAVPER ? AV_PER_ENTRY_FEES / 100 : (type === "scpi" ? config.entryFees / 100 : 0);
-  const mgmtFeeMonthly = isAVPER ? AV_PER_MGMT_FEES / 100 / 12 : 0;
+  const entryFeePct = type === "scpi" ? config.entryFees / 100 : 0;
+  const mgmtFeeMonthly = 0;
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = type === "scpi" ? SCPI_REVALUATION / 100 / 12 : 0;
   let capital = config.initialCapital * (1 - entryFeePct);
@@ -368,7 +368,7 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
       <div className="space-y-3">
         <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/15 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-cyan-200/80 leading-relaxed">
-            ✨ Rendement de <span className="font-semibold text-cyan-300">4% brut</span> grâce à un accompagnement personnalisé par votre conseiller.
+            ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -424,7 +424,7 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
         </button>
         {showAdvanced && (
           <div className="pt-2 border-t border-white/5 text-xs text-[var(--muted)]">
-            Rendement : 4% brut · Frais d&apos;entrée : 4% · Frais de gestion : 1%/an
+            Rendement : 4% net de frais
           </div>
         )}
       </div>
@@ -716,23 +716,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ CTA ═══ */}
-      <section className="mb-8">
-        <div className="bg-gradient-to-br from-[var(--accent)]/15 via-purple-600/10 to-[var(--accent2)]/15 rounded-3xl border border-[var(--accent)]/20 p-8 md:p-12 text-center">
-          <p className="text-2xl mb-3">🤝</p>
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Passez à l&apos;action</h2>
-          <p className="text-[var(--muted)] text-sm mb-6 max-w-md mx-auto">
-            Ces résultats vous intéressent ? Votre conseiller en gestion de patrimoine peut vous accompagner dans la mise en place de cette stratégie.
-          </p>
-          <button className="cta-pulse bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] text-white font-semibold px-8 py-3.5 rounded-xl text-sm hover:opacity-90 transition-opacity">
-            Prenez rendez-vous avec votre conseiller →
-          </button>
-          <p className="text-xs text-[var(--muted)] mt-4">Accompagnement personnalisé · Sans engagement</p>
-        </div>
-      </section>
-
-      <footer className="text-center text-xs text-[var(--muted)] py-6 border-t border-white/5">
-        Simulation indicative — Les rendements passés ne préjugent pas des rendements futurs
+      <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-white/5 space-y-1">
+        <p>Simulation à titre indicatif — Les performances passées ne préjugent pas des performances futures.</p>
+        <p>Les investissements comportent des risques, notamment de perte en capital.</p>
       </footer>
     </main>
   );
