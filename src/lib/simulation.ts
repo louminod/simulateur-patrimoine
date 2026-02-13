@@ -16,11 +16,11 @@ export function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "
   const mgmtFeeMonthly = 0;
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = type === "scpi" ? SCPI_REVALUATION / 100 / 12 : 0;
-  let capital = config.initialCapital * (1 - entryFeePct);
+  let capital = config.initialCapital;
   let totalInvested = config.initialCapital;
   const dataPoints: number[] = [capital];
   for (let m = 1; m <= months; m++) {
-    const contribution = config.monthlyContribution * (1 - entryFeePct);
+    const contribution = config.monthlyContribution;
     capital += contribution;
     totalInvested += config.monthlyContribution;
     if (type === "scpi" && m <= config.jouissanceMonths) { dataPoints.push(capital); continue; }
