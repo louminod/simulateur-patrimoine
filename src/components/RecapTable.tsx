@@ -20,7 +20,7 @@ function RecapTableInner({ results }: RecapTableProps) {
               <th className="text-left py-3">Enveloppe</th>
               <th className="text-right py-3">Investi</th>
               <th className="text-right py-3">Patrimoine</th>
-              <th className="text-right py-3">Gains</th>
+              <th className="text-right py-3">Gains nets*</th>
             </tr>
           </thead>
           <tbody>
@@ -51,6 +51,9 @@ function RecapTableInner({ results }: RecapTableProps) {
             </tr>
           </tbody>
         </table>
+        <p className="text-xs text-[var(--muted)] mt-3 leading-relaxed">
+          * Gains nets = Patrimoine estimé − Capital investi. Les frais d&apos;entrée (SCPI) et la fiscalité applicable (prélèvements sociaux de 17,2%, flat tax) sont déjà déduits du patrimoine estimé.
+        </p>
       </div>
     </section>
   );

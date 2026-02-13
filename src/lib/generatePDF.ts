@@ -230,6 +230,13 @@ export async function generatePDF(data: PDFData) {
   y += 14;
   setColor(DARK);
 
+  // Note under recap table
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "italic");
+  setColor(GRAY);
+  doc.text("* Gains nets = Patrimoine estimé − Capital investi. Les frais d'entrée et la fiscalité applicable sont déjà déduits du patrimoine.", M, y);
+  y += 6;
+
   // PER tax savings
   if (data.per.enabled && data.results.perSavings > 0) {
     y += 4;
@@ -262,6 +269,10 @@ export async function generatePDF(data: PDFData) {
     paramLine("Total investi", fmtEur(scpiRes.totalInvested));
     paramLine("Gains bruts", fmtEur(scpiRes.grossGains));
     paramLine("Gains nets", fmtEur(scpiRes.netGains));
+
+    y += 4;
+    infoBox("ℹ️ À propos des frais d'entrée SCPI",
+      `Les frais d'entrée SCPI (${fmtPct(data.scpi.entryFees)}) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s'appliquent sur le capital de départ investi, pas sur le capital constitué (plus-values et revalorisations).`);
   }
 
   // =================== PAGE 4 — SCPI CRÉDIT ===================
@@ -298,6 +309,10 @@ export async function generatePDF(data: PDFData) {
     paramLine("Total investi (effort réel)", fmtEur(creditRes.totalInvested));
     paramLine("Coût total du crédit", fmtEur(creditRes.totalLoanCost));
     paramLine("Gains nets", fmtEur(creditRes.netGains));
+
+    y += 4;
+    infoBox("ℹ️ À propos des frais d'entrée SCPI",
+      `Les frais d'entrée SCPI (${fmtPct(data.scpiCredit.entryFees)}) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s'appliquent sur le capital de départ investi, pas sur le capital constitué (plus-values et revalorisations).`);
   }
 
   // =================== PAGE 5 — ASSURANCE VIE ===================

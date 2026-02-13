@@ -63,7 +63,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
             <div className="grid grid-cols-2 gap-3">
               <CompactField label="Taux d'intérêt" value={config.interestRate} onChange={(v) => set({ interestRate: v })} suffix="%" step={0.05} tip="Taux nominal annuel du prêt" />
               <CompactField label="Rendement SCPI" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
-              <CompactField label="Frais d'entrée" value={config.entryFees} onChange={(v) => set({ entryFees: v })} suffix="%" />
+              <CompactField label="Frais d'entrée" value={config.entryFees} onChange={(v) => set({ entryFees: v })} suffix="%" tip="Frais payés uniquement à la revente des parts" />
               <div>
                 <label className="text-xs text-[var(--muted)] mb-1 block">Durée du prêt</label>
                 <div className="flex gap-1">
@@ -75,6 +75,12 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+              <p className="text-xs text-amber-300 font-medium mb-1">ℹ️ À propos des frais d&apos;entrée</p>
+              <p className="text-xs text-amber-200/80 leading-relaxed">
+                Les frais d&apos;entrée SCPI ({config.entryFees}%) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s&apos;appliquent sur le <strong>capital de départ investi</strong>, pas sur le capital constitué (plus-values et revalorisations).
+              </p>
             </div>
           </div>
         )}

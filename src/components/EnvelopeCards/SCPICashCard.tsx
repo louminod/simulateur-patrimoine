@@ -37,6 +37,12 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
               <CompactField label="Rendement" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
               <CompactField label="Frais d'entrée" value={config.entryFees} onChange={(v) => set({ entryFees: v })} suffix="%" tip="Environ 8% sur chaque versement, amortis dans le temps" />
             </div>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
+              <p className="text-xs text-amber-300 font-medium mb-1">ℹ️ À propos des frais d&apos;entrée</p>
+              <p className="text-xs text-amber-200/80 leading-relaxed">
+                Les frais d&apos;entrée SCPI ({config.entryFees}%) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s&apos;appliquent sur le <strong>capital de départ investi</strong>, pas sur le capital constitué (plus-values et revalorisations).
+              </p>
+            </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-[var(--muted)] flex items-center">
                 Réinvestir les revenus<Tip text="Les revenus sont automatiquement réinvestis pour accélérer la croissance" />
