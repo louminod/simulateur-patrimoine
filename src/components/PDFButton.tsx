@@ -1,46 +1,31 @@
 "use client";
 
-import { memo, useState, useCallback, type RefObject } from "react";
+import { memo, useState, useCallback } from "react";
+import type { EnvelopeConfig, SCPICreditConfig, AggregatedResults } from "@/lib/types";
 
 interface PDFButtonProps {
-  targetRef: RefObject<HTMLDivElement | null>;
+  years: number;
+  scpi: EnvelopeConfig;
+  scpiCredit: SCPICreditConfig;
+  av: EnvelopeConfig;
+  per: EnvelopeConfig;
+  results: AggregatedResults;
 }
 
-function PDFButtonInner({ targetRef }: PDFButtonProps) {
+function PDFButtonInner({ years, scpi, scpiCredit, av, per, results }: PDFButtonProps) {
   const [downloading, setDownloading] = useState(false);
 
   const downloadPDF = useCallback(async () => {
-    if (!targetRef.current) return;
     setDownloading(true);
     try {
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-      const canvas = await html2canvas(targetRef.current, {
-        backgroundColor: "#0a0a12",
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
-      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      let position = 0;
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      while (position < pdfHeight) {
-        if (position > 0) pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, -position, pdfWidth, pdfHeight);
-        position += pageHeight;
-      }
-      pdf.save("simulation-patrimoine.pdf");
+      const { generatePDF } = await import("@/lib/generatePDF");
+      await generatePDF({ years, scpi, scpiCredit, av, per, results });
     } catch (e) {
       console.error("PDF generation failed", e);
     } finally {
       setDownloading(false);
     }
-  }, [targetRef]);
+  }, [years, scpi, scpiCredit, av, per, results]);
 
   return (
     <section className="mb-8 text-center">
