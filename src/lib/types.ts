@@ -51,6 +51,12 @@ export interface SimEntry {
   result: SimResult;
 }
 
+export interface Milestone {
+  month: number;
+  label: string;
+  color: string;
+}
+
 export interface AggregatedResults {
   sims: SimEntry[];
   livret: LivretResult;

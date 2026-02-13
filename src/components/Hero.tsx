@@ -8,9 +8,10 @@ interface HeroProps {
   years: number;
   totalFinal: number;
   totalInvested: number;
+  showRealTerms?: boolean;
 }
 
-function HeroInner({ years, totalFinal, totalInvested }: HeroProps) {
+function HeroInner({ years, totalFinal, totalInvested, showRealTerms }: HeroProps) {
   return (
     <section className="hero-gradient rounded-b-3xl px-6 pt-10 pb-8 md:pt-14 md:pb-10 -mx-4 md:-mx-8 mb-8">
       <div className="max-w-2xl mx-auto text-center">
@@ -22,7 +23,7 @@ function HeroInner({ years, totalFinal, totalInvested }: HeroProps) {
           Simulez votre patrimoine avec les meilleures enveloppes d&apos;investissement
         </p>
         <div className="bg-white/[0.05] backdrop-blur-sm rounded-2xl border border-white/10 p-6 md:p-8">
-          <p className="text-xs text-[var(--muted)] uppercase tracking-widest mb-2">Votre patrimoine dans {years} ans</p>
+          <p className="text-xs text-[var(--muted)] uppercase tracking-widest mb-2">Votre patrimoine dans {years} ans{showRealTerms ? " (euros constants)" : ""}</p>
           <AnimatedNumber value={totalFinal} className="text-4xl md:text-6xl font-black bg-gradient-to-r from-[var(--accent)] via-[var(--accent2)] to-[var(--green)] bg-clip-text text-transparent animate-in" />
           <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
             <span className="text-sm text-[var(--green)] font-semibold">+{fmt(totalFinal - totalInvested)} de gains</span>

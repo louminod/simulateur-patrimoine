@@ -1,4 +1,4 @@
-import type { EnvelopeConfig, SCPICreditConfig, SimResult, SCPICreditResult, LivretResult } from "./types";
+import type { EnvelopeConfig, SCPICreditConfig, SimResult, SCPICreditResult, LivretResult, Milestone } from "./types";
 import { SCPI_REVALUATION } from "./constants";
 
 export function calcLoanPayment(principal: number, annualRate: number, years: number): number {
@@ -92,4 +92,73 @@ export function simulateLivret(configs: { initialCapital: number; monthlyContrib
   }
   const totalInvested = totalInitial + totalMonthly * months;
   return { dataPoints, capital, totalInvested, gains: capital - totalInvested };
+}
+
+export function adjustForInflation(amount: number, years: number, rate: number = 0.02): number {
+  return amount / Math.pow(1 + rate, years);
+}
+
+export function computePassiveIncome(
+  scpi: EnvelopeConfig,
+  scpiCredit: SCPICreditConfig,
+  years: number,
+): number {
+  let monthly = 0;
+  if (scpi.enabled) {
+    const scpiResult = simulate(scpi, years, "scpi");
+    monthly += scpiResult.capital * (scpi.rate / 100) / 12;
+  }
+  if (scpiCredit.enabled) {
+    const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
+    const netShares = totalInvestment;
+    const monthlyRevalo = 0.01 / 12; // SCPI_REVALUATION
+    let sharesValue = netShares;
+    const months = years * 12;
+    for (let m = 0; m < months; m++) {
+      sharesValue *= (1 + monthlyRevalo);
+    }
+    monthly += sharesValue * (scpiCredit.rate / 100) / 12;
+  }
+  return monthly;
+}
+
+export function computeMonthlyEffort(
+  scpi: EnvelopeConfig,
+  scpiCredit: SCPICreditConfig,
+  av: EnvelopeConfig,
+  per: EnvelopeConfig,
+): number {
+  let effort = 0;
+  if (scpi.enabled) effort += scpi.monthlyContribution;
+  if (av.enabled) effort += av.monthlyContribution;
+  if (per.enabled) effort += per.monthlyContribution;
+  if (scpiCredit.enabled) {
+    const payment = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+    const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
+    const dividend = totalInvestment * (scpiCredit.rate / 100) / 12;
+    effort += Math.max(0, payment - dividend);
+  }
+  return effort;
+}
+
+export function computeMilestones(
+  scpiCredit: SCPICreditConfig,
+  av: EnvelopeConfig,
+): Milestone[] {
+  const milestones: Milestone[] = [];
+  if (scpiCredit.enabled) {
+    milestones.push({
+      month: scpiCredit.loanYears * 12,
+      label: "Fin crédit SCPI",
+      color: "#c084fc",
+    });
+  }
+  if (av.enabled) {
+    milestones.push({
+      month: 8 * 12,
+      label: "Fiscalité AV avantageuse",
+      color: "#38bdf8",
+    });
+  }
+  return milestones;
 }

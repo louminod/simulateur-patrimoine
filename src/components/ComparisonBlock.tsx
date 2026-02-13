@@ -4,17 +4,26 @@ import { memo } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { fmt } from "@/lib/formatters";
 import { LIVRET_RATE } from "@/lib/constants";
+import { adjustForInflation } from "@/lib/simulation";
 import type { AggregatedResults } from "@/lib/types";
 
 interface ComparisonBlockProps {
   results: AggregatedResults;
   perEnabled: boolean;
   perTmi: number;
+  showRealTerms?: boolean;
+  years?: number;
 }
 
-function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockProps) {
-  const difference = results.totalFinal - results.livret.capital;
-  const differencePct = results.livret.capital > 0 ? ((difference / results.livret.capital) * 100).toFixed(0) : "0";
+function ComparisonBlockInner({ results, perEnabled, perTmi, showRealTerms = false, years = 25 }: ComparisonBlockProps) {
+  const adj = (v: number) => showRealTerms ? adjustForInflation(v, years) : v;
+  const totalFinal = adj(results.totalFinal);
+  const totalInvested = adj(results.totalInvested);
+  const livretCapital = adj(results.livret.capital);
+  const livretGains = adj(results.livret.gains);
+  const perSavings = adj(results.perSavings);
+  const difference = totalFinal - livretCapital;
+  const differencePct = livretCapital > 0 ? ((difference / livretCapital) * 100).toFixed(0) : "0";
 
   return (
     <section className="mb-8">
@@ -29,8 +38,8 @@ function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockPr
               <p className="text-2xl mb-2">💤</p>
               <p className="text-xs text-[var(--muted)] mb-1">Livret bancaire à {LIVRET_RATE}%</p>
               <p className="text-sm text-[var(--muted)] mb-2">Votre argent dort</p>
-              <AnimatedNumber value={results.livret.capital} className="text-2xl md:text-3xl font-bold text-gray-400" />
-              <p className="text-xs text-gray-600 mt-2">dont {fmt(results.livret.gains)} d&apos;intérêts</p>
+              <AnimatedNumber value={livretCapital} className="text-2xl md:text-3xl font-bold text-gray-400" />
+              <p className="text-xs text-gray-600 mt-2">dont {fmt(livretGains)} d&apos;intérêts</p>
             </div>
             <div className="text-center">
               <div className="hidden md:block text-4xl text-[var(--muted)] mb-3">→</div>
@@ -45,15 +54,15 @@ function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockPr
               <p className="text-2xl mb-2">🚀</p>
               <p className="text-xs text-[var(--accent2)] mb-1">Stratégie patrimoniale</p>
               <p className="text-sm text-white/70 mb-2">Patrimoine estimé</p>
-              <AnimatedNumber value={results.totalFinal} className="text-2xl md:text-3xl font-bold text-white" />
-              <p className="text-xs text-[var(--accent)]/70 mt-2">dont {fmt(results.totalFinal - results.totalInvested)} de gains</p>
+              <AnimatedNumber value={totalFinal} className="text-2xl md:text-3xl font-bold text-white" />
+              <p className="text-xs text-[var(--accent)]/70 mt-2">dont {fmt(totalFinal - totalInvested)} de gains</p>
             </div>
           </div>
-          {perEnabled && results.perSavings > 0 && (
+          {perEnabled && perSavings > 0 && (
             <div className="mt-6 text-center">
               <span className="inline-flex items-center gap-2 bg-[var(--orange)]/10 border border-[var(--orange)]/20 rounded-full px-5 py-2.5 text-sm">
                 <span>🎯</span>
-                <span className="text-[var(--orange)] font-semibold">Économie d&apos;impôt PER : {fmt(results.perSavings)}</span>
+                <span className="text-[var(--orange)] font-semibold">Économie d&apos;impôt PER : {fmt(perSavings)}</span>
                 <span className="text-xs text-[var(--muted)]">(TMI {perTmi}%)</span>
               </span>
             </div>

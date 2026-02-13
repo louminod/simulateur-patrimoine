@@ -2,13 +2,17 @@
 
 import { memo } from "react";
 import { fmt } from "@/lib/formatters";
+import { adjustForInflation } from "@/lib/simulation";
 import type { AggregatedResults } from "@/lib/types";
 
 interface RecapTableProps {
   results: AggregatedResults;
+  showRealTerms?: boolean;
+  years?: number;
 }
 
-function RecapTableInner({ results }: RecapTableProps) {
+function RecapTableInner({ results, showRealTerms = false, years = 25 }: RecapTableProps) {
+  const adj = (v: number) => showRealTerms ? adjustForInflation(v, years) : v;
   return (
     <section className="mb-8">
       <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-5 md:p-6 overflow-x-auto">
@@ -29,16 +33,16 @@ function RecapTableInner({ results }: RecapTableProps) {
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: s.color }} />
                   <span className="text-white/90">{s.label}</span>
                 </td>
-                <td className="text-right text-[var(--muted)]">{fmt(s.result.totalInvested)}</td>
-                <td className="text-right font-medium text-white">{fmt(s.result.capital)}</td>
-                <td className="text-right text-[var(--green)] font-medium">{fmt(s.result.netGains)}</td>
+                <td className="text-right text-[var(--muted)]">{fmt(adj(s.result.totalInvested))}</td>
+                <td className="text-right font-medium text-white">{fmt(adj(s.result.capital))}</td>
+                <td className="text-right text-[var(--green)] font-medium">{fmt(adj(s.result.netGains))}</td>
               </tr>
             ))}
             <tr className="font-semibold">
               <td className="py-3.5 text-white">🚀 Total stratégie</td>
-              <td className="text-right text-white">{fmt(results.totalInvested)}</td>
-              <td className="text-right text-[var(--green)]">{fmt(results.totalFinal)}</td>
-              <td className="text-right text-[var(--green)]">{fmt(results.totalNet)}</td>
+              <td className="text-right text-white">{fmt(adj(results.totalInvested))}</td>
+              <td className="text-right text-[var(--green)]">{fmt(adj(results.totalFinal))}</td>
+              <td className="text-right text-[var(--green)]">{fmt(adj(results.totalNet))}</td>
             </tr>
           </tbody>
         </table>
