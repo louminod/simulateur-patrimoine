@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/constants";
+import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
 import { Hero } from "@/components/Hero";
 import { HorizonSlider } from "@/components/HorizonSlider";
@@ -10,6 +11,7 @@ import { SCPICreditDetail } from "@/components/SCPICreditDetail";
 import { ComparisonBlock } from "@/components/ComparisonBlock";
 import { PatrimoineChart } from "@/components/PatrimoineChart";
 import { RecapTable } from "@/components/RecapTable";
+import { ShareButton } from "@/components/ShareButton";
 
 export default function Home() {
   const [years, setYears] = useState(25);
@@ -18,7 +20,23 @@ export default function Home() {
   const [av, setAv] = useState(defaultAV);
   const [per, setPer] = useState(defaultPER);
 
+  useEffect(() => {
+    const decoded = decodeState(window.location.search);
+    if (decoded) {
+      if (decoded.years !== undefined) setYears(decoded.years);
+      if (decoded.scpi) setScpi(decoded.scpi);
+      if (decoded.scpiCredit) setScpiCredit(decoded.scpiCredit);
+      if (decoded.av) setAv(decoded.av);
+      if (decoded.per) setPer(decoded.per);
+    }
+  }, []);
+
   const results = useSimulation(scpi, scpiCredit, av, per, years);
+
+  const buildShareUrl = () => {
+    const qs = encodeState({ years, scpi, scpiCredit, av, per });
+    return `${window.location.origin}${window.location.pathname}?${qs}`;
+  };
 
   return (
     <main className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 pb-12">
@@ -40,6 +58,10 @@ export default function Home() {
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart chartData={results.chartData} years={years} />
       <RecapTable results={results} />
+
+      <div className="py-6">
+        <ShareButton buildUrl={buildShareUrl} />
+      </div>
 
       <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-white/5 space-y-1">
         <p>Simulation à titre indicatif — Les performances passées ne préjugent pas des performances futures.</p>
