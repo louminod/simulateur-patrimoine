@@ -7,9 +7,10 @@ interface ResultSummaryProps {
   monthlyEffort: number;
   totalFinal: number;
   monthlyIncome: number;
+  hasCreditSCPI: boolean;
 }
 
-function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome }: ResultSummaryProps) {
+function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome, hasCreditSCPI }: ResultSummaryProps) {
   if (monthlyEffort <= 0 && monthlyIncome <= 0) return null;
   const ratio = totalFinal / (monthlyEffort > 0 ? monthlyEffort * 12 : 1);
 
@@ -45,7 +46,7 @@ function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome }: Result
                 {fmt(Math.round(monthlyIncome))}<span className="text-base md:text-xl font-semibold text-amber-400/70">/mois</span>
               </p>
               <p className="text-xs text-[var(--muted)] mt-2">
-                Loyers SCPI après remboursement du crédit
+                {hasCreditSCPI ? "Loyers SCPI après remboursement du crédit" : "Loyers SCPI perçus chaque mois"}
               </p>
             </div>
           </div>
