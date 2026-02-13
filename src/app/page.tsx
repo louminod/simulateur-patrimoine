@@ -330,7 +330,7 @@ function SCPICreditCard({ config, onChange }: { config: SCPICreditConfig; onChan
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
           <p className="text-xs text-emerald-300 font-medium mb-1">💡 Avantage fiscal</p>
           <p className="text-xs text-emerald-200/80 leading-relaxed">
-            Les intérêts d&apos;emprunt sont <strong>déductibles de vos revenus fonciers</strong>. Le coût réel du crédit est donc significativement réduit par l&apos;économie d&apos;impôt. Vous constituez un patrimoine immobilier sans effort grâce à l&apos;effet de levier du crédit.
+            Les <strong>intérêts d&apos;emprunt</strong> ainsi que les <strong>frais liés au crédit</strong> (assurance emprunteur, frais de dossier, frais de garantie) sont <strong>déductibles de vos revenus fonciers</strong>. Le coût réel du financement est donc significativement réduit par l&apos;économie d&apos;impôt. Vous constituez un patrimoine immobilier grâce à l&apos;effet de levier du crédit.
           </p>
         </div>
         <button onClick={() => setShowAdvanced(!showAdvanced)}
