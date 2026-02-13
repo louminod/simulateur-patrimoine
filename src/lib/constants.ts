@@ -12,7 +12,7 @@ export const defaultSCPI: EnvelopeConfig = {
 };
 
 export const defaultSCPICredit: SCPICreditConfig = {
-  enabled: false, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 10,
+  enabled: true, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 10,
 };
 
 export const defaultAV: EnvelopeConfig = {

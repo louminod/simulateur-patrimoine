@@ -14,8 +14,7 @@ import { ComparisonBlock } from "@/components/ComparisonBlock";
 import { PatrimoineChart } from "@/components/PatrimoineChart";
 import { RecapTable } from "@/components/RecapTable";
 import { ShareButton } from "@/components/ShareButton";
-import { PassiveIncome } from "@/components/PassiveIncome";
-import { EffortSummary } from "@/components/EffortSummary";
+import { ResultSummary } from "@/components/ResultSummary";
 
 export default function Home() {
   const [years, setYears] = useState(25);
@@ -68,9 +67,8 @@ export default function Home() {
 
       {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
 
+      <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} />
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
-      <EffortSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} />
-      <PassiveIncome monthlyIncome={passiveIncome} />
       <PatrimoineChart
         chartData={results.chartData}
         years={years}

@@ -21,7 +21,7 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
         <h2 className="text-sm font-semibold mb-5 text-white">📈 Évolution de votre patrimoine</h2>
         <div className="h-[250px] md:h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="gStrategy" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#7c5cfc" stopOpacity={0.4} />
@@ -41,7 +41,7 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
               <YAxis stroke="#4a4a6a" fontSize={10} tick={{ fontSize: 9 }}
                 className="text-[9px] md:text-[11px]"
                 tickFormatter={(v: number) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`}
-                width={45} />
+                width={45} domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]} />
               <RTooltip contentStyle={{ background: "#16161f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", fontSize: "12px" }}
                 formatter={(value: unknown) => fmt(Number(value))}
                 labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`} />
