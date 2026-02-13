@@ -390,7 +390,7 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
         {showAdvanced && (
           <div className="pt-2 border-t border-white/5 space-y-3">
             <CompactField label="Prélèvements sociaux" value={config.socialCharges} onChange={(v) => set({ socialCharges: v })} suffix="%" tip="17,2% en France sur les gains" />
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1">
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
@@ -399,6 +399,9 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>
                 <span className="text-white">1% <span className="text-emerald-400 ml-1">— inférieur à la moyenne (1,5-2%)</span></span>
+              </div>
+              <div className="border-t border-white/5 pt-1.5 mt-1">
+                <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>
           </div>
@@ -448,7 +451,7 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
         {showAdvanced && (
           <div className="pt-2 border-t border-white/5 space-y-3">
             <p className="text-xs text-[var(--muted)]">Rendement : 4% net de frais</p>
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1">
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
@@ -457,6 +460,9 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>
                 <span className="text-white">1% <span className="text-emerald-400 ml-1">— inférieur à la moyenne (1,5-2%)</span></span>
+              </div>
+              <div className="border-t border-white/5 pt-1.5 mt-1">
+                <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>
           </div>
