@@ -27,7 +27,7 @@ function AVCardInner({ config, onChange }: AVCardProps) {
         <button onClick={() => setShowAdvanced(!showAdvanced)}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
-          Personnaliser
+          Détail
         </button>
         {showAdvanced && (
           <div className="pt-2 border-t border-white/5 space-y-3">
