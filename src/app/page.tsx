@@ -377,9 +377,6 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
           <p className="text-[11px] text-cyan-200/80 leading-relaxed">
             ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
           </p>
-          <p className="text-[10px] text-cyan-300/50 mt-1.5">
-            Frais réduits : 4% à l&apos;entrée · 1%/an de gestion — parmi les plus bas du marché
-          </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <CompactField label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
@@ -391,8 +388,19 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
           Personnaliser
         </button>
         {showAdvanced && (
-          <div className="pt-2 border-t border-white/5">
+          <div className="pt-2 border-t border-white/5 space-y-3">
             <CompactField label="Prélèvements sociaux" value={config.socialCharges} onChange={(v) => set({ socialCharges: v })} suffix="%" tip="17,2% en France sur les gains" />
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1">
+              <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
+                <span className="text-white">4% <span className="text-emerald-400 ml-1">— parmi les plus bas du marché</span></span>
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais de gestion annuels</span>
+                <span className="text-white">1% <span className="text-emerald-400 ml-1">— inférieur à la moyenne (1,5-2%)</span></span>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -413,9 +421,6 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
         <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/15 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-orange-200/80 leading-relaxed">
             ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> + déduction fiscale à l&apos;entrée selon votre TMI.
-          </p>
-          <p className="text-[10px] text-orange-300/50 mt-1.5">
-            Frais réduits : 4% à l&apos;entrée · 1%/an de gestion — parmi les plus bas du marché
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -441,8 +446,19 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
           Personnaliser
         </button>
         {showAdvanced && (
-          <div className="pt-2 border-t border-white/5 text-xs text-[var(--muted)]">
-            Rendement : 4% net de frais
+          <div className="pt-2 border-t border-white/5 space-y-3">
+            <p className="text-xs text-[var(--muted)]">Rendement : 4% net de frais</p>
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1">
+              <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
+                <span className="text-white">4% <span className="text-emerald-400 ml-1">— parmi les plus bas du marché</span></span>
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais de gestion annuels</span>
+                <span className="text-white">1% <span className="text-emerald-400 ml-1">— inférieur à la moyenne (1,5-2%)</span></span>
+              </div>
+            </div>
           </div>
         )}
       </div>
