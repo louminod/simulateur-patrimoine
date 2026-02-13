@@ -17,7 +17,7 @@ function RecapTableInner({ results }: RecapTableProps) {
           <thead>
             <tr className="text-[var(--muted)] text-xs border-b border-white/5">
               <th className="text-left py-3">Enveloppe</th>
-              <th className="text-right py-3">Investi</th>
+              <th className="text-right py-3">Investi personnellement</th>
               <th className="text-right py-3">Patrimoine</th>
               <th className="text-right py-3">Gains nets*</th>
             </tr>
