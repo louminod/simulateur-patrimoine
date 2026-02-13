@@ -51,6 +51,9 @@ function AVCardInner({ config, onChange }: AVCardProps) {
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>
+            <div className="bg-cyan-500/10 border border-cyan-500/15 rounded-lg p-2.5">
+              <p className="text-[10px] text-cyan-200/80">🔓 <strong className="text-cyan-300">Fonds disponibles à tout moment</strong> — Vous pouvez effectuer un rachat partiel ou total de votre assurance vie quand vous le souhaitez, sans délai ni pénalité.</p>
+            </div>
           </div>
         )}
       </div>

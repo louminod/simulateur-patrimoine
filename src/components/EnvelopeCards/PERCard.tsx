@@ -68,6 +68,9 @@ function PERCardInner({ config, onChange }: PERCardProps) {
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>
+            <div className="bg-orange-500/10 border border-orange-500/15 rounded-lg p-2.5">
+              <p className="text-[10px] text-orange-200/80">🔒 <strong className="text-orange-300">Fonds bloqués jusqu&apos;à la retraite</strong> — En contrepartie de l&apos;avantage fiscal, les sommes versées sur le PER sont bloquées jusqu&apos;à votre départ à la retraite (sauf cas exceptionnels : achat de résidence principale, accident de la vie).</p>
+            </div>
           </div>
         )}
       </div>
