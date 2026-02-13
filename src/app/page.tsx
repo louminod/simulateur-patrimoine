@@ -42,7 +42,7 @@ const defaultSCPI: EnvelopeConfig = {
   reinvestDividends: true, entryFees: 8, jouissanceMonths: 3, socialCharges: 0, tmi: 30,
 };
 const defaultSCPICredit: SCPICreditConfig = {
-  enabled: false, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 20, rate: 5.5, entryFees: 8,
+  enabled: false, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 8,
 };
 const defaultAV: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 4,
@@ -326,6 +326,13 @@ function SCPICreditCard({ config, onChange }: { config: SCPICreditConfig; onChan
             </span>
           </div>
         </div>
+        {/* Tax deduction info */}
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
+          <p className="text-xs text-emerald-300 font-medium mb-1">💡 Avantage fiscal</p>
+          <p className="text-xs text-emerald-200/80 leading-relaxed">
+            Les intérêts d&apos;emprunt sont <strong>déductibles de vos revenus fonciers</strong>. Le coût réel du crédit est donc significativement réduit par l&apos;économie d&apos;impôt. Vous constituez un patrimoine immobilier sans effort grâce à l&apos;effet de levier du crédit.
+          </p>
+        </div>
         <button onClick={() => setShowAdvanced(!showAdvanced)}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
@@ -565,7 +572,7 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div><p className="text-xs text-[var(--muted)]">Parts acquises</p><p className="text-lg font-bold">{fmt(cr.netShares)}</p></div>
               <div><p className="text-xs text-[var(--muted)]">Effort mensuel</p><p className={`text-lg font-bold ${cr.cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>{fmt(Math.abs(cr.cashflow))}/mois</p></div>
-              <div><p className="text-xs text-[var(--muted)]">Coût du crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.totalLoanCost)}</p></div>
+              <div><p className="text-xs text-[var(--muted)]">Coût du crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.totalLoanCost)}</p><p className="text-[10px] text-emerald-400 mt-1">Intérêts déductibles des impôts</p></div>
               <div><p className="text-xs text-[var(--muted)]">Patrimoine SCPI</p><p className="text-lg font-bold text-[var(--green)]">{fmt(cr.capital)}</p></div>
             </div>
             {years > scpiCredit.loanYears && (
