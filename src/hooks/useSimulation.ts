@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { EnvelopeConfig, SCPICreditConfig, AggregatedResults } from "@/lib/types";
 import { LIVRET_RATE } from "@/lib/constants";
-import { simulate, simulateSCPICredit, simulateLivret, calcLoanPayment } from "@/lib/simulation";
+import { simulate, simulateSCPICredit, simulateLivret, calcLoanPayment, calculateBlendedReturn } from "@/lib/simulation";
 
 export function useSimulation(
   scpi: EnvelopeConfig,
@@ -43,6 +43,7 @@ export function useSimulation(
     const totalFinal = sims.reduce((s, sim) => s + sim.result.capital, 0);
     const totalNet = sims.reduce((s, sim) => s + sim.result.netGains, 0);
     const perSavings = sims.find((s) => s.type === "per")?.result.perTaxSavings ?? 0;
-    return { sims, livret, chartData, totalInvested, totalFinal, totalNet, perSavings };
+    const blendedReturn = calculateBlendedReturn(scpi, scpiCredit, av, per, years);
+    return { sims, livret, chartData, totalInvested, totalFinal, totalNet, perSavings, blendedReturn };
   }, [scpi, scpiCredit, av, per, years]);
 }
