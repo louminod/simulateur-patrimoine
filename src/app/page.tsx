@@ -534,13 +534,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ SIMPLE PARAMS ═══ */}
+      {/* ═══ HORIZON ONLY ═══ */}
       <section className="mb-8">
-        <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-6 space-y-5">
-          <SliderField label="💰 Capital de départ" value={totalInitial} onChange={() => {}} min={0} max={200000} step={1000} suffix="€"
-            tip="Répartissez votre capital dans les enveloppes ci-dessous" />
-          <SliderField label="📅 Effort d'épargne mensuel" value={totalMonthly} onChange={() => {}} min={0} max={5000} step={50} suffix="€/mois"
-            tip="Répartissez vos versements dans les enveloppes ci-dessous" />
+        <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-6">
           <SliderField label="⏳ Horizon de placement" value={years} onChange={setYears} min={1} max={40} suffix="ans"
             tip="Plus vous investissez longtemps, plus les intérêts composés travaillent pour vous" />
         </div>
