@@ -423,7 +423,10 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
       <div className="space-y-3">
         <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/15 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-orange-200/80 leading-relaxed">
-            ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> + déduction fiscale à l&apos;entrée selon votre TMI.
+            ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
+          </p>
+          <p className="text-[10px] text-orange-200/60 mt-1.5 leading-relaxed">
+            💰 Vos versements sont <strong className="text-orange-300">déductibles de votre revenu imposable</strong>. À une TMI de 30%, un versement de 100€ ne vous coûte réellement que 70€. Plus votre TMI est élevée, plus l&apos;avantage est important.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -450,7 +453,6 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
         </button>
         {showAdvanced && (
           <div className="pt-2 border-t border-white/5 space-y-3">
-            <p className="text-xs text-[var(--muted)]">Rendement : 4% net de frais</p>
             <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
