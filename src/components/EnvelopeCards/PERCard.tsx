@@ -24,7 +24,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
       <div className="space-y-3">
         <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/15 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-orange-200/80 leading-relaxed">
-            ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
+            ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> grâce à un accompagnement personnalisé et des arbitrages réguliers effectués par votre conseiller pour optimiser vos placements.
           </p>
           <p className="text-[10px] text-orange-200/60 mt-1.5 leading-relaxed">
             💰 Vos versements sont <strong className="text-orange-300">déductibles de votre revenu imposable</strong>. À une TMI de 30%, un versement de 100€ ne vous coûte réellement que 70€. Plus votre TMI est élevée, plus l&apos;avantage est important.

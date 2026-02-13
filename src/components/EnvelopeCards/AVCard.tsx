@@ -22,7 +22,7 @@ function AVCardInner({ config, onChange }: AVCardProps) {
       <div className="space-y-3">
         <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/15 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-cyan-200/80 leading-relaxed">
-            ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
+            ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé et des arbitrages réguliers effectués par votre conseiller pour optimiser vos placements.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
