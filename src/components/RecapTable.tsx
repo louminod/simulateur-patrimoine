@@ -43,7 +43,7 @@ function RecapTableInner({ results }: RecapTableProps) {
           </tbody>
         </table>
         <p className="text-xs text-[var(--muted)] mt-3 leading-relaxed">
-          * Gains nets = Patrimoine estimé − Capital investi − Fiscalité applicable. Pour l&apos;assurance vie et le PER, les prélèvements sociaux (17,2%) sont déduits des gains. Pour les SCPI, aucun frais n&apos;est déduit (les frais d&apos;entrée font partie du capital tant que les parts ne sont pas revendues).
+          * Gains nets = Patrimoine estimé − Capital investi. Simulation basée sur l&apos;hypothèse qu&apos;aucun rachat n&apos;est effectué. La fiscalité (prélèvements sociaux, impôt sur le revenu) ne s&apos;applique qu&apos;au moment du retrait des fonds.
         </p>
       </div>
     </section>

@@ -31,18 +31,10 @@ export function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "
     dataPoints.push(capital);
   }
   const grossGains = capital - totalInvested;
-  let netGains = grossGains;
-  if (type === "av") {
-    const abattement = years >= 8 ? 4600 : 0;
-    const taxableGains = Math.max(0, grossGains - abattement);
-    const socialTax = grossGains * (config.socialCharges / 100);
-    const incomeTax = years >= 8 ? taxableGains * 0.075 : taxableGains * 0.128;
-    netGains = grossGains - socialTax - incomeTax;
-  }
+  const netGains = grossGains;
   let perTaxSavings = 0;
   if (type === "per") {
     perTaxSavings = totalInvested * (config.tmi / 100);
-    netGains = grossGains - grossGains * 0.172;
   }
   return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings };
 }
