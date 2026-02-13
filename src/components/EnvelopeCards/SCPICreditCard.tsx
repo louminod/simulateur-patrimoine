@@ -50,7 +50,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
         <button onClick={() => setShowAdvanced(!showAdvanced)}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
-          Détail
+          Détail &amp; Personnalisation
         </button>
         {showAdvanced && (
           <div className="space-y-3 pt-2 border-t border-white/5">
