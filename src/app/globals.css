@@ -3,37 +3,72 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0a0a0f;
-  --card: #12121a;
+  --bg: #0a0a12;
+  --card: #111119;
+  --card2: #16161f;
   --border: #1e1e2e;
-  --text: #e4e4e7;
-  --muted: #71717a;
-  --accent: #6366f1;
-  --accent2: #22d3ee;
-  --green: #22c55e;
-  --orange: #f97316;
-  --pink: #ec4899;
+  --text: #e8e8ed;
+  --muted: #8585a0;
+  --accent: #7c5cfc;
+  --accent2: #38bdf8;
+  --green: #34d399;
+  --orange: #fb923c;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
+/* Range slider */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
+  height: 8px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 4px;
   outline: none;
+  opacity: 0.85;
+  transition: opacity 0.2s;
 }
+input[type="range"]:hover { opacity: 1; }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  background: var(--accent);
+  width: 24px;
+  height: 24px;
+  background: white;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(124,92,252,0.5);
 }
+
+/* Number input hide arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }
+
+/* Animated gradient bg */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(124,92,252,0.15) 0%, rgba(56,189,248,0.1) 50%, rgba(52,211,153,0.08) 100%);
+}
+
+/* Pulse animation for CTA */
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124,92,252,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(124,92,252,0); }
+}
+.cta-pulse { animation: pulse-soft 2.5s infinite; }
+
+/* Counter animation */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: count-up 0.5s ease-out; }
