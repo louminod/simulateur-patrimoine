@@ -606,7 +606,13 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div><p className="text-xs text-[var(--muted)]">Parts acquises</p><p className="text-lg font-bold">{fmt(cr.netShares)}</p></div>
-              <div><p className="text-xs text-[var(--muted)]">Effort mensuel</p><p className={`text-lg font-bold ${cr.cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>{fmt(Math.abs(cr.cashflow))}/mois</p></div>
+              <div>
+                <p className="text-xs text-[var(--muted)]">Effort mensuel</p>
+                <p className={`text-lg font-bold ${cr.cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>{cr.cashflow >= 0 ? "+" : "-"}{fmt(Math.abs(cr.cashflow))}/mois</p>
+                <p className={`text-[10px] mt-1 ${cr.cashflow >= 0 ? "text-emerald-400" : "text-orange-300"}`}>
+                  {cr.cashflow >= 0 ? "🎉 Les loyers couvrent le crédit — vous gagnez de l'argent !" : "💡 Effort à fournir en complément des loyers perçus"}
+                </p>
+              </div>
               <div><p className="text-xs text-[var(--muted)]">Coût du crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.totalLoanCost)}</p><p className="text-[10px] text-emerald-400 mt-1">Intérêts déductibles des impôts</p></div>
               <div><p className="text-xs text-[var(--muted)]">Patrimoine SCPI</p><p className="text-lg font-bold text-[var(--green)]">{fmt(cr.capital)}</p></div>
             </div>
