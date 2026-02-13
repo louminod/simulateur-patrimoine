@@ -4,24 +4,20 @@ import { memo } from "react";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { fmt } from "@/lib/formatters";
 import { LIVRET_RATE } from "@/lib/constants";
-import { adjustForInflation } from "@/lib/simulation";
 import type { AggregatedResults } from "@/lib/types";
 
 interface ComparisonBlockProps {
   results: AggregatedResults;
   perEnabled: boolean;
   perTmi: number;
-  showRealTerms?: boolean;
-  years?: number;
 }
 
-function ComparisonBlockInner({ results, perEnabled, perTmi, showRealTerms = false, years = 25 }: ComparisonBlockProps) {
-  const adj = (v: number) => showRealTerms ? adjustForInflation(v, years) : v;
-  const totalFinal = adj(results.totalFinal);
-  const totalInvested = adj(results.totalInvested);
-  const livretCapital = adj(results.livret.capital);
-  const livretGains = adj(results.livret.gains);
-  const perSavings = adj(results.perSavings);
+function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockProps) {
+  const totalFinal = results.totalFinal;
+  const totalInvested = results.totalInvested;
+  const livretCapital = results.livret.capital;
+  const livretGains = results.livret.gains;
+  const perSavings = results.perSavings;
   const difference = totalFinal - livretCapital;
   const differencePct = livretCapital > 0 ? ((difference / livretCapital) * 100).toFixed(0) : "0";
 

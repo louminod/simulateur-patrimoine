@@ -94,10 +94,6 @@ export function simulateLivret(configs: { initialCapital: number; monthlyContrib
   return { dataPoints, capital, totalInvested, gains: capital - totalInvested };
 }
 
-export function adjustForInflation(amount: number, years: number, rate: number = 0.02): number {
-  return amount / Math.pow(1 + rate, years);
-}
-
 export function computePassiveIncome(
   scpi: EnvelopeConfig,
   scpiCredit: SCPICreditConfig,

@@ -5,7 +5,7 @@ import { track } from "@vercel/analytics";
 import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/constants";
 import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
-import { computePassiveIncome, computeMonthlyEffort, computeMilestones, adjustForInflation } from "@/lib/simulation";
+import { computePassiveIncome, computeMonthlyEffort, computeMilestones } from "@/lib/simulation";
 import { Hero } from "@/components/Hero";
 import { HorizonSlider } from "@/components/HorizonSlider";
 import { SCPICashCard, SCPICreditCard, AVCard, PERCard } from "@/components/EnvelopeCards";
@@ -23,8 +23,6 @@ export default function Home() {
   const [scpiCredit, setScpiCredit] = useState(defaultSCPICredit);
   const [av, setAv] = useState(defaultAV);
   const [per, setPer] = useState(defaultPER);
-  const [showRealTerms, setShowRealTerms] = useState(false);
-
   const horizonTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const trackedView = useRef(false);
   useEffect(() => {
@@ -48,10 +46,6 @@ export default function Home() {
   const monthlyEffort = useMemo(() => computeMonthlyEffort(scpi, scpiCredit, av, per), [scpi, scpiCredit, av, per]);
   const milestones = useMemo(() => computeMilestones(scpiCredit, av), [scpiCredit, av]);
 
-  const displayPassiveIncome = showRealTerms ? adjustForInflation(passiveIncome, years) : passiveIncome;
-  const displayTotalFinal = showRealTerms ? adjustForInflation(results.totalFinal, years) : results.totalFinal;
-  const displayTotalInvested = showRealTerms ? adjustForInflation(results.totalInvested, years) : results.totalInvested;
-
   const buildShareUrl = () => {
     const qs = encodeState({ years, scpi, scpiCredit, av, per });
     return `${window.location.origin}${window.location.pathname}?${qs}`;
@@ -59,7 +53,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 pb-12">
-      <Hero years={years} totalFinal={displayTotalFinal} totalInvested={displayTotalInvested} showRealTerms={showRealTerms} />
+      <Hero years={years} totalFinal={results.totalFinal} totalInvested={results.totalInvested} />
       <HorizonSlider years={years} onChange={(v) => { setYears(v); if (horizonTimer.current) clearTimeout(horizonTimer.current); horizonTimer.current = setTimeout(() => track("horizon_changed", { years: String(v) }), 500); }} />
 
       <section className="mb-12">
@@ -74,17 +68,15 @@ export default function Home() {
 
       {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
 
-      <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} showRealTerms={showRealTerms} years={years} />
-      <EffortSummary monthlyEffort={monthlyEffort} totalFinal={displayTotalFinal} />
-      <PassiveIncome monthlyIncome={displayPassiveIncome} />
+      <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
+      <EffortSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} />
+      <PassiveIncome monthlyIncome={passiveIncome} />
       <PatrimoineChart
         chartData={results.chartData}
         years={years}
         milestones={milestones}
-        showRealTerms={showRealTerms}
-        onToggleRealTerms={() => setShowRealTerms((v) => !v)}
       />
-      <RecapTable results={results} showRealTerms={showRealTerms} years={years} />
+      <RecapTable results={results} />
 
       <div className="py-6">
         <ShareButton buildUrl={buildShareUrl} />
