@@ -613,7 +613,7 @@ export default function Home() {
                   {cr.cashflow >= 0 ? "🎉 Les loyers couvrent le crédit — vous gagnez de l'argent !" : "💡 Effort à fournir en complément des loyers perçus"}
                 </p>
               </div>
-              <div><p className="text-xs text-[var(--muted)]">Coût du crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.totalLoanCost)}</p><p className="text-[10px] text-emerald-400 mt-1">Intérêts déductibles des impôts</p></div>
+{/* coût du crédit retiré */}
               <div><p className="text-xs text-[var(--muted)]">Patrimoine SCPI</p><p className="text-lg font-bold text-[var(--green)]">{fmt(cr.capital)}</p></div>
             </div>
             {years > scpiCredit.loanYears && (
