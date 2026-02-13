@@ -37,7 +37,6 @@ function AVCardInner({ config, onChange }: AVCardProps) {
                 ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé et des arbitrages réguliers effectués par votre conseiller pour optimiser vos placements.
               </p>
             </div>
-            <CompactField label="Prélèvements sociaux" value={config.socialCharges} onChange={(v) => set({ socialCharges: v })} suffix="%" tip="17,2% en France sur les gains" />
             <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
