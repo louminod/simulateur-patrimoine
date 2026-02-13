@@ -414,8 +414,8 @@ export default function Home() {
               <YAxis stroke="#71717a" fontSize={11} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`} />
               <RTooltip
                 contentStyle={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "8px", fontSize: "12px" }}
-                formatter={(value: number) => fmt(value)}
-                labelFormatter={(m: number) => `Année ${(m / 12).toFixed(1)}`}
+                formatter={(value: unknown) => fmt(Number(value))}
+                labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
               />
               <Legend />
               {scpi.enabled && <Area type="monotone" dataKey="SCPI" stroke="#6366f1" fill="url(#gSCPI)" strokeWidth={2} />}
