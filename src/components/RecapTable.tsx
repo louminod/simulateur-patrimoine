@@ -43,7 +43,7 @@ function RecapTableInner({ results }: RecapTableProps) {
           </tbody>
         </table>
         <p className="text-xs text-[var(--muted)] mt-3 leading-relaxed">
-          * Gains nets = Patrimoine estimé − Capital investi. Les frais d&apos;entrée (SCPI) et la fiscalité applicable (prélèvements sociaux de 17,2%, flat tax) sont déjà déduits du patrimoine estimé.
+          * Gains nets = Patrimoine estimé − Capital investi.
         </p>
       </div>
     </section>
