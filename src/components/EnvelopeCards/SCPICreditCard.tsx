@@ -83,7 +83,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
               </div>
               <div className="border-t border-white/5 pt-1.5 mt-1 space-y-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais de gestion supplémentaire, de sortie ni de rachat</p>
-                <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué (plus-values et revalorisations).</p>
+                <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué. Ex : pour 50 000€ investis qui deviennent 85 000€ après 25 ans, les frais ne portent que sur les 50 000€ initiaux (soit 5 000€), et non sur les 85 000€ constitués.</p>
               </div>
             </div>
           </div>
