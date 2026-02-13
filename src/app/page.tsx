@@ -10,7 +10,6 @@ import { SCPICreditDetail } from "@/components/SCPICreditDetail";
 import { ComparisonBlock } from "@/components/ComparisonBlock";
 import { PatrimoineChart } from "@/components/PatrimoineChart";
 import { RecapTable } from "@/components/RecapTable";
-import { PDFButton } from "@/components/PDFButton";
 
 export default function Home() {
   const [years, setYears] = useState(25);
@@ -41,7 +40,6 @@ export default function Home() {
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart chartData={results.chartData} years={years} />
       <RecapTable results={results} />
-      <PDFButton years={years} scpi={scpi} scpiCredit={scpiCredit} av={av} per={per} results={results} />
 
       <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-white/5 space-y-1">
         <p>Simulation à titre indicatif — Les performances passées ne préjugent pas des performances futures.</p>

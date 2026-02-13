@@ -8,11 +8,11 @@ export const TMI_OPTIONS = [11, 30, 41, 45] as const;
 
 export const defaultSCPI: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 5.5,
-  reinvestDividends: true, entryFees: 8, jouissanceMonths: 3, socialCharges: 0, tmi: 30,
+  reinvestDividends: true, entryFees: 10, jouissanceMonths: 3, socialCharges: 0, tmi: 30,
 };
 
 export const defaultSCPICredit: SCPICreditConfig = {
-  enabled: false, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 8,
+  enabled: false, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 10,
 };
 
 export const defaultAV: EnvelopeConfig = {

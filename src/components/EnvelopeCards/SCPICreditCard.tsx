@@ -63,24 +63,28 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
             <div className="grid grid-cols-2 gap-3">
               <CompactField label="Taux d'intérêt" value={config.interestRate} onChange={(v) => set({ interestRate: v })} suffix="%" step={0.05} tip="Taux nominal annuel du prêt" />
               <CompactField label="Rendement SCPI" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
-              <CompactField label="Frais d'entrée" value={config.entryFees} onChange={(v) => set({ entryFees: v })} suffix="%" tip="Frais payés uniquement à la revente des parts" />
-              <div>
-                <label className="text-xs text-[var(--muted)] mb-1 block">Durée du prêt</label>
-                <div className="flex gap-1">
-                  {[10, 15, 20, 25].map((y) => (
-                    <button key={y} onClick={() => set({ loanYears: y })}
-                      className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.loanYears === y ? "bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] text-white" : "bg-white/5 text-[var(--muted)] hover:bg-white/10"}`}>
-                      {y}a
-                    </button>
-                  ))}
-                </div>
+            </div>
+            <div>
+              <label className="text-xs text-[var(--muted)] mb-1 block">Durée du prêt</label>
+              <div className="flex gap-1">
+                {[10, 15, 20, 25].map((y) => (
+                  <button key={y} onClick={() => set({ loanYears: y })}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.loanYears === y ? "bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] text-white" : "bg-white/5 text-[var(--muted)] hover:bg-white/10"}`}>
+                    {y}a
+                  </button>
+                ))}
               </div>
             </div>
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-              <p className="text-xs text-amber-300 font-medium mb-1">ℹ️ À propos des frais d&apos;entrée</p>
-              <p className="text-xs text-amber-200/80 leading-relaxed">
-                Les frais d&apos;entrée SCPI ({config.entryFees}%) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s&apos;appliquent sur le <strong>capital de départ investi</strong>, pas sur le capital constitué (plus-values et revalorisations).
-              </p>
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+              <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
+                <span className="text-white">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
+              </div>
+              <div className="border-t border-white/5 pt-1.5 mt-1 space-y-1">
+                <p className="text-[10px] text-emerald-400/80">✓ Aucun frais de gestion supplémentaire, de sortie ni de rachat</p>
+                <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué (plus-values et revalorisations).</p>
+              </div>
             </div>
           </div>
         )}

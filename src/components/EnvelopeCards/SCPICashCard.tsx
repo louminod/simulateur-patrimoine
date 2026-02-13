@@ -33,21 +33,23 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
         </button>
         {showAdvanced && (
           <div className="space-y-3 pt-2 border-t border-white/5">
-            <div className="grid grid-cols-2 gap-3">
-              <CompactField label="Rendement" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
-              <CompactField label="Frais d'entrée" value={config.entryFees} onChange={(v) => set({ entryFees: v })} suffix="%" tip="Environ 8% sur chaque versement, amortis dans le temps" />
-            </div>
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-              <p className="text-xs text-amber-300 font-medium mb-1">ℹ️ À propos des frais d&apos;entrée</p>
-              <p className="text-xs text-amber-200/80 leading-relaxed">
-                Les frais d&apos;entrée SCPI ({config.entryFees}%) sont des frais payés uniquement à la revente des parts, si revente il y a. Ils s&apos;appliquent sur le <strong>capital de départ investi</strong>, pas sur le capital constitué (plus-values et revalorisations).
-              </p>
-            </div>
+            <CompactField label="Rendement" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
             <div className="flex items-center justify-between">
               <span className="text-xs text-[var(--muted)] flex items-center">
                 Réinvestir les revenus<Tip text="Les revenus sont automatiquement réinvestis pour accélérer la croissance" />
               </span>
               <Toggle on={config.reinvestDividends} onToggle={() => set({ reinvestDividends: !config.reinvestDividends })} />
+            </div>
+            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+              <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
+                <span className="text-white">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
+              </div>
+              <div className="border-t border-white/5 pt-1.5 mt-1 space-y-1">
+                <p className="text-[10px] text-emerald-400/80">✓ Aucun frais de gestion supplémentaire, de sortie ni de rachat</p>
+                <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué (plus-values et revalorisations).</p>
+              </div>
             </div>
           </div>
         )}
