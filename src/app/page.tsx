@@ -377,6 +377,9 @@ function AVCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: En
           <p className="text-[11px] text-cyan-200/80 leading-relaxed">
             ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé par votre conseiller.
           </p>
+          <p className="text-[10px] text-cyan-300/50 mt-1.5">
+            Frais réduits : 4% à l&apos;entrée · 1%/an de gestion — parmi les plus bas du marché
+          </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <CompactField label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
@@ -407,6 +410,14 @@ function PERCard({ config, onChange }: { config: EnvelopeConfig; onChange: (c: E
       gradient="from-orange-500/20 to-amber-500/20" borderColor="border-orange-500/30"
     >
       <div className="space-y-3">
+        <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/15 rounded-xl px-3 py-2.5">
+          <p className="text-[11px] text-orange-200/80 leading-relaxed">
+            ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> + déduction fiscale à l&apos;entrée selon votre TMI.
+          </p>
+          <p className="text-[10px] text-orange-300/50 mt-1.5">
+            Frais réduits : 4% à l&apos;entrée · 1%/an de gestion — parmi les plus bas du marché
+          </p>
+        </div>
         <div className="grid grid-cols-2 gap-3">
           <CompactField label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
           <CompactField label="Effort d'épargne" value={config.monthlyContribution} onChange={(v) => set({ monthlyContribution: v })} suffix="€/mois" />
