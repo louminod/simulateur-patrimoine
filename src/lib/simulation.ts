@@ -61,7 +61,7 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
   let sharesValue = netShares;
   const dataPoints: number[] = [];
   for (let m = 0; m <= months; m++) {
-    const netCapital = sharesValue - remainingDebt - entryFeesAmount;
+    const netCapital = sharesValue - remainingDebt;
     dataPoints.push(netCapital);
     if (m < months) {
       sharesValue *= (1 + monthlyRevalo);
@@ -76,7 +76,7 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
   }
   const cashflow = (netShares * monthlyRate) - monthlyPayment;
   const totalLoanCost = monthlyPayment * loanMonths - config.loanAmount;
-  const finalSharesValue = sharesValue - entryFeesAmount;
+  const finalSharesValue = sharesValue;
   const totalOutOfPocket = config.downPayment + Math.max(0, -cashflow) * Math.min(loanMonths, months);
   return {
     dataPoints, capital: finalSharesValue, totalInvested: totalOutOfPocket,
