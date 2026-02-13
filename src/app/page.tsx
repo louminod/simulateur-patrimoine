@@ -25,9 +25,9 @@ export default function Home() {
       <Hero years={years} totalFinal={results.totalFinal} totalInvested={results.totalInvested} />
       <HorizonSlider years={years} onChange={setYears} />
 
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-white mb-4">Choisissez vos enveloppes</h2>
-        <div className="grid md:grid-cols-2 gap-4">
+      <section className="mb-12">
+        <h2 className="text-lg font-bold text-white mb-6">Choisissez vos enveloppes</h2>
+        <div className="grid md:grid-cols-2 gap-5">
           <SCPICashCard config={scpi} onChange={setScpi} />
           <SCPICreditCard config={scpiCredit} onChange={setScpiCredit} />
           <AVCard config={av} onChange={setAv} />

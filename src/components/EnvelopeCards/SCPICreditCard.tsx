@@ -47,12 +47,6 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
             </span>
           </div>
         </div>
-        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
-          <p className="text-xs text-emerald-300 font-medium mb-1">💡 Avantage fiscal</p>
-          <p className="text-xs text-emerald-200/80 leading-relaxed">
-            Les <strong>intérêts d&apos;emprunt</strong> ainsi que les <strong>frais liés au crédit</strong> (assurance emprunteur, frais de dossier, frais de garantie) sont <strong>déductibles de vos revenus fonciers</strong>. Le coût réel du financement est donc significativement réduit par l&apos;économie d&apos;impôt. Vous constituez un patrimoine immobilier grâce à l&apos;effet de levier du crédit.
-          </p>
-        </div>
         <button onClick={() => setShowAdvanced(!showAdvanced)}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
@@ -60,6 +54,12 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
         </button>
         {showAdvanced && (
           <div className="space-y-3 pt-2 border-t border-white/5">
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
+              <p className="text-xs text-emerald-300 font-medium mb-1">💡 Avantage fiscal</p>
+              <p className="text-xs text-emerald-200/80 leading-relaxed">
+                Les <strong>intérêts d&apos;emprunt</strong> ainsi que les <strong>frais liés au crédit</strong> (assurance emprunteur, frais de dossier, frais de garantie) sont <strong>déductibles de vos revenus fonciers</strong>. Le coût réel du financement est donc significativement réduit par l&apos;économie d&apos;impôt. Vous constituez un patrimoine immobilier grâce à l&apos;effet de levier du crédit.
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <CompactField label="Taux d'intérêt" value={config.interestRate} onChange={(v) => set({ interestRate: v })} suffix="%" step={0.05} tip="Taux nominal annuel du prêt" />
               <CompactField label="Rendement SCPI" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
