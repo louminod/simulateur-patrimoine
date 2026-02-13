@@ -604,17 +604,21 @@ export default function Home() {
               <span className="text-xl">🏦</span>
               <h3 className="text-sm font-semibold text-purple-300">Détail SCPI à crédit</h3>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-4">
               <div><p className="text-xs text-[var(--muted)]">Parts acquises</p><p className="text-lg font-bold">{fmt(cr.netShares)}</p></div>
-              <div>
-                <p className="text-xs text-[var(--muted)]">Effort mensuel</p>
-                <p className={`text-lg font-bold ${cr.cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>{cr.cashflow >= 0 ? "+" : "-"}{fmt(Math.abs(cr.cashflow))}/mois</p>
-                <p className={`text-[10px] mt-1 ${cr.cashflow >= 0 ? "text-emerald-400" : "text-orange-300"}`}>
-                  {cr.cashflow >= 0 ? "🎉 Les loyers couvrent le crédit — vous gagnez de l'argent !" : "💡 Effort à fournir en complément des loyers perçus"}
-                </p>
-              </div>
-{/* coût du crédit retiré */}
-              <div><p className="text-xs text-[var(--muted)]">Patrimoine SCPI</p><p className="text-lg font-bold text-[var(--green)]">{fmt(cr.capital)}</p></div>
+              <div><p className="text-xs text-[var(--muted)]">Mensualité crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.monthlyPayment)}/mois</p></div>
+              <div><p className="text-xs text-[var(--muted)]">Revenus SCPI</p><p className="text-lg font-bold text-[var(--green)]">+{fmt(cr.monthlyDividend)}/mois</p></div>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 flex flex-col items-center gap-1">
+              <p className="text-xs text-[var(--muted)]">Effort mensuel réel</p>
+              <p className={`text-2xl font-bold ${cr.cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>{cr.cashflow >= 0 ? "+" : "-"}{fmt(Math.abs(cr.cashflow))}/mois</p>
+              <p className={`text-[11px] mt-1 ${cr.cashflow >= 0 ? "text-emerald-400" : "text-orange-300"}`}>
+                {cr.cashflow >= 0 ? "🎉 Les loyers couvrent le crédit — vous gagnez de l'argent !" : "💡 Effort à fournir en complément des loyers perçus"}
+              </p>
+            </div>
+            <div className="mt-4 text-center">
+              <p className="text-xs text-[var(--muted)]">Patrimoine SCPI estimé à {years} ans</p>
+              <p className="text-2xl font-bold text-[var(--green)]">{fmt(cr.capital)}</p>
             </div>
             {years > scpiCredit.loanYears && (
               <p className="text-xs text-purple-300/70 mt-4">
