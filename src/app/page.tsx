@@ -195,7 +195,8 @@ function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "
 // ── Simulate SCPI credit ──
 function simulateSCPICredit(config: SCPICreditConfig, totalYears: number) {
   const totalInvestment = config.loanAmount + config.downPayment;
-  const netShares = totalInvestment * (1 - config.entryFees / 100);
+  const netShares = totalInvestment; // 100% invested; entry fees deducted at exit
+  const entryFeesAmount = totalInvestment * (config.entryFees / 100);
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
   const monthlyPayment = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
@@ -209,7 +210,7 @@ function simulateSCPICredit(config: SCPICreditConfig, totalYears: number) {
   const dataPoints: number[] = [];
 
   for (let m = 0; m <= months; m++) {
-    const netCapital = sharesValue - remainingDebt;
+    const netCapital = sharesValue - remainingDebt - entryFeesAmount;
     dataPoints.push(netCapital);
 
     if (m < months) {
@@ -229,7 +230,7 @@ function simulateSCPICredit(config: SCPICreditConfig, totalYears: number) {
 
   const cashflow = (netShares * monthlyRate) - monthlyPayment;
   const totalLoanCost = monthlyPayment * loanMonths - config.loanAmount;
-  const finalSharesValue = sharesValue;
+  const finalSharesValue = sharesValue - entryFeesAmount; // entry fees deducted at exit
   const totalOutOfPocket = config.downPayment + Math.max(0, -cashflow) * Math.min(loanMonths, months);
 
   return {
@@ -326,7 +327,7 @@ function SCPICard({ cashConfig, onCashChange, creditConfig, onCreditChange }: {
   const anyEnabled = cashConfig.enabled || creditConfig.enabled;
 
   const payment = calcLoanPayment(creditConfig.loanAmount, creditConfig.interestRate, creditConfig.loanYears);
-  const netShares = (creditConfig.loanAmount + creditConfig.downPayment) * (1 - creditConfig.entryFees / 100);
+  const netShares = creditConfig.loanAmount + creditConfig.downPayment; // 100% invested; fees at exit
   const monthlyDiv = netShares * (creditConfig.rate / 100) / 12;
   const cashflow = monthlyDiv - payment;
 
