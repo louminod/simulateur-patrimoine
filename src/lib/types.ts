@@ -57,20 +57,6 @@ export interface Milestone {
   color: string;
 }
 
-export interface BlendedReturnData {
-  overallRate: number;
-  contributions: Array<{
-    envelope: string;
-    rate: number;
-    weight: number;
-    contribution: number;
-  }>;
-  scpiCreditPhases?: {
-    duringCredit: number;
-    afterCredit: number;
-  };
-}
-
 export interface AggregatedResults {
   sims: SimEntry[];
   livret: LivretResult;
@@ -79,5 +65,4 @@ export interface AggregatedResults {
   totalFinal: number;
   totalNet: number;
   perSavings: number;
-  blendedReturn: BlendedReturnData;
 }

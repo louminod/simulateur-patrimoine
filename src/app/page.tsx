@@ -67,13 +67,7 @@ export default function Home() {
 
       {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
 
-      <ResultSummary 
-        monthlyEffort={monthlyEffort} 
-        totalFinal={results.totalFinal} 
-        monthlyIncome={passiveIncome} 
-        hasCreditSCPI={scpiCredit.enabled} 
-        blendedReturn={results.blendedReturn} 
-      />
+      <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart
         chartData={results.chartData}

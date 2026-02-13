@@ -2,73 +2,21 @@
 
 import { memo } from "react";
 import { fmt } from "@/lib/formatters";
-import type { BlendedReturnData } from "@/lib/types";
 
 interface ResultSummaryProps {
   monthlyEffort: number;
   totalFinal: number;
   monthlyIncome: number;
   hasCreditSCPI: boolean;
-  blendedReturn: BlendedReturnData;
 }
 
-function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome, hasCreditSCPI, blendedReturn }: ResultSummaryProps) {
-  if (monthlyEffort <= 0 && monthlyIncome <= 0 && blendedReturn.contributions.length === 0) return null;
+function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome, hasCreditSCPI }: ResultSummaryProps) {
+  if (monthlyEffort <= 0 && monthlyIncome <= 0) return null;
   const ratio = totalFinal / (monthlyEffort > 0 ? monthlyEffort * 12 : 1);
 
   return (
     <section className="mb-8">
       <h2 className="text-sm font-semibold text-white mb-4">🎯 Votre résultat</h2>
-      
-      {/* Rendement moyen pondéré */}
-      {blendedReturn.contributions.length > 0 && (
-        <div className="mb-6">
-          <div className="bg-gradient-to-r from-emerald-500/10 via-green-500/5 to-emerald-500/10 rounded-2xl border border-emerald-500/20 p-6">
-            <div className="text-center mb-4">
-              <h3 className="text-sm font-semibold text-emerald-400 mb-2">📊 Rendement moyen pondéré de votre stratégie</h3>
-              <div className="text-3xl font-black text-emerald-300">
-                {blendedReturn.overallRate.toFixed(1)}%
-                <span className="text-base font-semibold text-emerald-400/70 ml-1">net/an</span>
-              </div>
-            </div>
-            
-            {/* Breakdown par enveloppe */}
-            <div className="space-y-2">
-              {blendedReturn.contributions.map((contrib, idx) => (
-                <div key={idx} className="flex justify-between items-center text-sm">
-                  <span className="text-gray-300">{contrib.envelope}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-400">{contrib.rate.toFixed(1)}%</span>
-                    <span className="text-gray-500 text-xs">
-                      ({(contrib.weight / blendedReturn.contributions.reduce((s, c) => s + c.weight, 0) * 100).toFixed(0)}%)
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* SCPI Crédit phases si applicable */}
-            {blendedReturn.scpiCreditPhases && (
-              <div className="mt-4 pt-3 border-t border-emerald-500/20">
-                <p className="text-xs text-gray-400 mb-2">SCPI Crédit - Rendement par phase :</p>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="text-center">
-                    <span className="text-orange-400">Phase 1</span>
-                    <div className="font-semibold">{blendedReturn.scpiCreditPhases.duringCredit.toFixed(1)}%</div>
-                    <span className="text-gray-500">Pendant crédit</span>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-green-400">Phase 2</span>
-                    <div className="font-semibold">{blendedReturn.scpiCreditPhases.afterCredit.toFixed(1)}%</div>
-                    <span className="text-gray-500">Après remboursement</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       <div className="grid md:grid-cols-2 gap-4">
         {/* Effort réel vs résultat */}
         {monthlyEffort > 0 && (
