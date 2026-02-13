@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useCallback } from "react";
+import { track } from "@vercel/analytics";
 import type { EnvelopeConfig } from "@/lib/types";
 import { CompactField } from "@/components/ui/CompactField";
 import { Toggle } from "@/components/ui/Toggle";
@@ -19,14 +20,14 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
     <EnvelopeCardWrapper
       icon="🏢" title="SCPI Comptant" subtitle="Investissez dans l'immobilier et percevez des revenus réguliers"
       enabled={config.enabled} onToggle={() => set({ enabled: !config.enabled })}
-      gradient="from-indigo-500/20 to-violet-500/20" borderColor="border-indigo-500/30"
+      gradient="from-indigo-500/20 to-violet-500/20" borderColor="border-indigo-500/30" trackType="scpi_cash"
     >
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <CompactField label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
           <CompactField label="Effort d'épargne" value={config.monthlyContribution} onChange={(v) => set({ monthlyContribution: v })} suffix="€/mois" />
         </div>
-        <button onClick={() => setShowAdvanced(!showAdvanced)}
+        <button onClick={() => { if (!showAdvanced) track("detail_opened", { type: "scpi_cash" }); setShowAdvanced(!showAdvanced); }}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
           Détail &amp; Personnalisation
@@ -38,7 +39,7 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
               <span className="text-xs text-[var(--muted)] flex items-center">
                 Réinvestir les revenus<Tip text="C'est la puissance des intérêts composés : vos revenus génèrent eux-mêmes des revenus, qui génèrent à leur tour des revenus. L'effet boule de neige accélère considérablement la croissance de votre patrimoine sur le long terme." />
               </span>
-              <Toggle on={config.reinvestDividends} onToggle={() => set({ reinvestDividends: !config.reinvestDividends })} />
+              <Toggle on={config.reinvestDividends} onToggle={() => { track("scpi_reinvest_toggled", { enabled: String(!config.reinvestDividends) }); set({ reinvestDividends: !config.reinvestDividends }); }} />
             </div>
             {config.reinvestDividends && (
               <div className="bg-indigo-500/10 border border-indigo-500/15 rounded-xl px-3 py-2">

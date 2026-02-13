@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 
 interface ShareButtonProps {
   buildUrl: () => string;
@@ -10,6 +11,7 @@ export function ShareButton({ buildUrl }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleClick = async () => {
+    track("simulation_shared");
     const url = buildUrl();
     try {
       await navigator.clipboard.writeText(url);

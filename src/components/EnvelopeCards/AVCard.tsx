@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useCallback } from "react";
+import { track } from "@vercel/analytics";
 import type { EnvelopeConfig } from "@/lib/types";
 import { CompactField } from "@/components/ui/CompactField";
 import { EnvelopeCardWrapper } from "./EnvelopeCardWrapper";
@@ -17,14 +18,14 @@ function AVCardInner({ config, onChange }: AVCardProps) {
     <EnvelopeCardWrapper
       icon="🛡️" title="Assurance Vie" subtitle="Épargne flexible avec fiscalité avantageuse après 8 ans"
       enabled={config.enabled} onToggle={() => set({ enabled: !config.enabled })}
-      gradient="from-cyan-500/20 to-blue-500/20" borderColor="border-cyan-500/30"
+      gradient="from-cyan-500/20 to-blue-500/20" borderColor="border-cyan-500/30" trackType="av"
     >
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <CompactField label="Capital initial" value={config.initialCapital} onChange={(v) => set({ initialCapital: v })} suffix="€" />
           <CompactField label="Effort d'épargne" value={config.monthlyContribution} onChange={(v) => set({ monthlyContribution: v })} suffix="€/mois" />
         </div>
-        <button onClick={() => setShowAdvanced(!showAdvanced)}
+        <button onClick={() => { if (!showAdvanced) track("detail_opened", { type: "av" }); setShowAdvanced(!showAdvanced); }}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
           Détail &amp; Personnalisation

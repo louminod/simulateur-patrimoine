@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { track } from "@vercel/analytics";
 import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/constants";
 import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
@@ -20,6 +21,8 @@ export default function Home() {
   const [av, setAv] = useState(defaultAV);
   const [per, setPer] = useState(defaultPER);
 
+  const horizonTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const trackedView = useRef(false);
   useEffect(() => {
     const decoded = decodeState(window.location.search);
     if (decoded) {
@@ -28,6 +31,10 @@ export default function Home() {
       if (decoded.scpiCredit) setScpiCredit(decoded.scpiCredit);
       if (decoded.av) setAv(decoded.av);
       if (decoded.per) setPer(decoded.per);
+    }
+    if (!trackedView.current) {
+      trackedView.current = true;
+      track("simulation_viewed", { from_shared_link: String(!!decoded) });
     }
   }, []);
 
@@ -41,7 +48,7 @@ export default function Home() {
   return (
     <main className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 pb-12">
       <Hero years={years} totalFinal={results.totalFinal} totalInvested={results.totalInvested} />
-      <HorizonSlider years={years} onChange={setYears} />
+      <HorizonSlider years={years} onChange={(v) => { setYears(v); if (horizonTimer.current) clearTimeout(horizonTimer.current); horizonTimer.current = setTimeout(() => track("horizon_changed", { years: String(v) }), 500); }} />
 
       <section className="mb-12">
         <h2 className="text-lg font-bold text-white mb-6">Choisissez vos enveloppes</h2>

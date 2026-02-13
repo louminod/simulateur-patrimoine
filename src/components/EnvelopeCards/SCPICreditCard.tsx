@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useCallback } from "react";
+import { track } from "@vercel/analytics";
 import type { SCPICreditConfig } from "@/lib/types";
 import { calcLoanPayment } from "@/lib/simulation";
 import { fmt } from "@/lib/formatters";
@@ -24,7 +25,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
     <EnvelopeCardWrapper
       icon="🏦" title="SCPI à Crédit" subtitle="La banque finance votre patrimoine immobilier"
       enabled={config.enabled} onToggle={() => set({ enabled: !config.enabled })}
-      gradient="from-purple-500/20 to-pink-500/20" borderColor="border-purple-500/30"
+      gradient="from-purple-500/20 to-pink-500/20" borderColor="border-purple-500/30" trackType="scpi_credit"
     >
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
@@ -47,7 +48,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
             </span>
           </div>
         </div>
-        <button onClick={() => setShowAdvanced(!showAdvanced)}
+        <button onClick={() => { if (!showAdvanced) track("detail_opened", { type: "scpi_credit" }); setShowAdvanced(!showAdvanced); }}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
           Détail &amp; Personnalisation

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useCallback } from "react";
+import { track } from "@vercel/analytics";
 import type { EnvelopeConfig } from "@/lib/types";
 import { TMI_OPTIONS } from "@/lib/constants";
 import { CompactField } from "@/components/ui/CompactField";
@@ -19,7 +20,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
     <EnvelopeCardWrapper
       icon="🎯" title="Plan Épargne Retraite" subtitle="Préparez votre retraite tout en réduisant vos impôts"
       enabled={config.enabled} onToggle={() => set({ enabled: !config.enabled })}
-      gradient="from-orange-500/20 to-amber-500/20" borderColor="border-orange-500/30"
+      gradient="from-orange-500/20 to-amber-500/20" borderColor="border-orange-500/30" trackType="per"
     >
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
@@ -39,7 +40,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
             ))}
           </div>
         </div>
-        <button onClick={() => setShowAdvanced(!showAdvanced)}
+        <button onClick={() => { if (!showAdvanced) track("detail_opened", { type: "per" }); setShowAdvanced(!showAdvanced); }}
           className="text-xs text-[var(--accent)] hover:text-[var(--accent2)] transition-colors flex items-center gap-1">
           <span className={`transition-transform ${showAdvanced ? "rotate-90" : ""}`}>▸</span>
           Détail &amp; Personnalisation
