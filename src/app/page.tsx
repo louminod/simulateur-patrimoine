@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import {
   AreaChart,
   Area,
@@ -499,6 +501,39 @@ function EnvelopeCardWrapper({ icon, title, subtitle, enabled, onToggle, gradien
 // MAIN PAGE
 // ══════════════════════════════════════════
 export default function Home() {
+  const mainRef = useRef<HTMLDivElement>(null);
+  const [downloading, setDownloading] = useState(false);
+
+  const downloadPDF = useCallback(async () => {
+    if (!mainRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(mainRef.current, {
+        backgroundColor: "#0a0a12",
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      let position = 0;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      while (position < pdfHeight) {
+        if (position > 0) pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, -position, pdfWidth, pdfHeight);
+        position += pageHeight;
+      }
+      pdf.save("simulation-patrimoine.pdf");
+    } catch (e) {
+      console.error("PDF generation failed", e);
+    } finally {
+      setDownloading(false);
+    }
+  }, []);
+
   const [years, setYears] = useState(25);
   const [scpi, setScpi] = useState(defaultSCPI);
   const [scpiCredit, setScpiCredit] = useState(defaultSCPICredit);
@@ -550,7 +585,7 @@ export default function Home() {
   const differencePct = results.livret.capital > 0 ? ((difference / results.livret.capital) * 100).toFixed(0) : "0";
 
   return (
-    <main className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 pb-12">
+    <main ref={mainRef} className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 pb-12">
 
       {/* ═══ HERO ═══ */}
       <section className="hero-gradient rounded-b-3xl px-6 pt-10 pb-8 md:pt-14 md:pb-10 -mx-4 md:-mx-8 mb-8">
@@ -726,8 +761,7 @@ export default function Home() {
                 <th className="text-left py-3">Enveloppe</th>
                 <th className="text-right py-3">Investi</th>
                 <th className="text-right py-3">Patrimoine</th>
-                <th className="text-right py-3 hidden sm:table-cell">Gains bruts</th>
-                <th className="text-right py-3">Gains nets</th>
+                <th className="text-right py-3">Gains</th>
               </tr>
             </thead>
             <tbody>
@@ -739,7 +773,6 @@ export default function Home() {
                   </td>
                   <td className="text-right text-[var(--muted)]">{fmt(s.result.totalInvested)}</td>
                   <td className="text-right font-medium text-white">{fmt(s.result.capital)}</td>
-                  <td className="text-right text-[var(--green)] hidden sm:table-cell">{fmt(s.result.grossGains)}</td>
                   <td className="text-right text-[var(--green)] font-medium">{fmt(s.result.netGains)}</td>
                 </tr>
               ))}
@@ -749,19 +782,29 @@ export default function Home() {
                 </td>
                 <td className="text-right">{fmt(results.livret.totalInvested)}</td>
                 <td className="text-right">{fmt(results.livret.capital)}</td>
-                <td className="text-right hidden sm:table-cell">{fmt(results.livret.gains)}</td>
                 <td className="text-right">{fmt(results.livret.gains)}</td>
               </tr>
               <tr className="font-semibold">
                 <td className="py-3.5 text-white">🚀 Total stratégie</td>
                 <td className="text-right text-white">{fmt(results.totalInvested)}</td>
                 <td className="text-right text-[var(--green)]">{fmt(results.totalFinal)}</td>
-                <td className="text-right text-[var(--green)] hidden sm:table-cell">{fmt(results.totalFinal - results.totalInvested)}</td>
                 <td className="text-right text-[var(--green)]">{fmt(results.totalNet)}</td>
               </tr>
             </tbody>
           </table>
         </div>
+      </section>
+
+      {/* ═══ PDF DOWNLOAD ═══ */}
+      <section className="mb-8 text-center">
+        <button onClick={downloadPDF} disabled={downloading}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] hover:opacity-90 disabled:opacity-50 text-white font-medium py-3 px-8 rounded-xl transition-all text-sm">
+          {downloading ? (
+            <><span className="animate-spin">⏳</span> Génération en cours...</>
+          ) : (
+            <><span>📄</span> Télécharger la simulation en PDF</>
+          )}
+        </button>
       </section>
 
       <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-white/5 space-y-1">
