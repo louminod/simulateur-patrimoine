@@ -2,7 +2,6 @@
 
 import { memo } from "react";
 import { fmt } from "@/lib/formatters";
-import { LIVRET_RATE } from "@/lib/constants";
 import type { AggregatedResults } from "@/lib/types";
 
 interface RecapTableProps {
@@ -35,14 +34,6 @@ function RecapTableInner({ results }: RecapTableProps) {
                 <td className="text-right text-[var(--green)] font-medium">{fmt(s.result.netGains)}</td>
               </tr>
             ))}
-            <tr className="border-b border-white/[0.03] text-gray-500">
-              <td className="py-3.5 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />Livret {LIVRET_RATE}%
-              </td>
-              <td className="text-right">{fmt(results.livret.totalInvested)}</td>
-              <td className="text-right">{fmt(results.livret.capital)}</td>
-              <td className="text-right">{fmt(results.livret.gains)}</td>
-            </tr>
             <tr className="font-semibold">
               <td className="py-3.5 text-white">🚀 Total stratégie</td>
               <td className="text-right text-white">{fmt(results.totalInvested)}</td>

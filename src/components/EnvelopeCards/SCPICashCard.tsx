@@ -36,10 +36,17 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
             <CompactField label="Rendement" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
             <div className="flex items-center justify-between">
               <span className="text-xs text-[var(--muted)] flex items-center">
-                Réinvestir les revenus<Tip text="Les revenus sont automatiquement réinvestis pour accélérer la croissance" />
+                Réinvestir les revenus<Tip text="C'est la puissance des intérêts composés : vos revenus génèrent eux-mêmes des revenus, qui génèrent à leur tour des revenus. L'effet boule de neige accélère considérablement la croissance de votre patrimoine sur le long terme." />
               </span>
               <Toggle on={config.reinvestDividends} onToggle={() => set({ reinvestDividends: !config.reinvestDividends })} />
             </div>
+            {config.reinvestDividends && (
+              <div className="bg-indigo-500/10 border border-indigo-500/15 rounded-xl px-3 py-2">
+                <p className="text-[10px] text-indigo-200/80 leading-relaxed">
+                  🔄 <strong className="text-indigo-300">Intérêts composés activés</strong> — Vos loyers sont réinvestis automatiquement en nouvelles parts. Chaque mois, votre patrimoine génère davantage de revenus. Sur 25 ans, cette stratégie peut <strong>doubler vos gains</strong> par rapport à un simple encaissement des loyers.
+                </p>
+              </div>
+            )}
             <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
