@@ -29,7 +29,7 @@ export function ShareButton({ buildUrl }: ShareButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-[var(--muted)] hover:text-white"
+      className="flex items-center gap-2 mx-auto px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30"
     >
       {copied ? (
         <>✅ Lien copié !</>
