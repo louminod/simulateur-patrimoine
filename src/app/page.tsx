@@ -69,6 +69,8 @@ export default function Home() {
 
       {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
 
+      <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
+
       {(av.enabled || per.enabled) && (
         <section className="mb-12">
           <h2 className="text-lg font-bold text-white mb-6">⚖️ Pourquoi notre solution est plus performante</h2>
@@ -99,7 +101,6 @@ export default function Home() {
         </section>
       )}
 
-      <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart
         chartData={results.chartData}
