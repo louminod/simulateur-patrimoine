@@ -35,6 +35,8 @@ const fees: FeeRow[] = [
   { label: "Frais d'entrée versement initial", banker: `${BANK_ENTRY_FEES}%`, solution: `${SOLUTION_ENTRY_FEES}%`, verdict: "disadvantage" },
   { label: "Frais d'entrée versements programmés", banker: `${BANK_ENTRY_FEES}%`, solution: `${SOLUTION_ENTRY_FEES}%`, verdict: "disadvantage" },
   { label: "Frais de gestion annuels", banker: `${BANK_MGMT_FEES}%`, solution: `${SOLUTION_MGMT_FEES}%`, verdict: "advantage" },
+  { label: "Frais de sortie", banker: "1%", solution: "0%", verdict: "advantage" },
+  { label: "Frais d'arbitrage", banker: "1%", solution: "0%", verdict: "advantage" },
   { label: "Taux de rentabilité", banker: `${BANK_RATE}%`, solution: `${SOLUTION_RATE}%`, verdict: "advantage" },
 ];
 
