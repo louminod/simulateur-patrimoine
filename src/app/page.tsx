@@ -6,7 +6,6 @@ import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/con
 import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
 import { computePassiveIncome, computeMonthlyEffort, computeMilestones } from "@/lib/simulation";
-import { fmt } from "@/lib/formatters";
 import { Hero } from "@/components/Hero";
 import { HorizonSlider } from "@/components/HorizonSlider";
 import { SCPICashCard, SCPICreditCard, AVCard, PERCard } from "@/components/EnvelopeCards";
@@ -81,7 +80,6 @@ export default function Home() {
                 icon="🛡️"
                 initialCapital={av.initialCapital}
                 monthlyContribution={av.monthlyContribution}
-                years={years}
                 gradient="from-cyan-500/10 to-blue-500/10"
                 borderColor="border-cyan-500/20"
               />
@@ -92,7 +90,6 @@ export default function Home() {
                 icon="🎯"
                 initialCapital={per.initialCapital}
                 monthlyContribution={per.monthlyContribution}
-                years={years}
                 gradient="from-orange-500/10 to-amber-500/10"
                 borderColor="border-orange-500/20"
               />
@@ -107,7 +104,7 @@ export default function Home() {
         years={years}
         milestones={milestones}
       />
-      <RecapTable results={results} years={years} />
+      <RecapTable results={results} />
 
       <div className="py-6">
         <ShareButton buildUrl={buildShareUrl} />

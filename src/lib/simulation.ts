@@ -1,5 +1,5 @@
 import type { EnvelopeConfig, SCPICreditConfig, SimResult, SCPICreditResult, LivretResult, Milestone } from "./types";
-import { SCPI_REVALUATION } from "./constants";
+import { SCPI_REVALUATION, BANK_ENTRY_FEES, BANK_MGMT_FEES, BANK_RATE, SOLUTION_ENTRY_FEES, SOLUTION_MGMT_FEES, SOLUTION_RATE } from "./constants";
 
 export function calcLoanPayment(principal: number, annualRate: number, years: number): number {
   if (principal <= 0) return 0;
@@ -107,7 +107,7 @@ export function computePassiveIncome(
   if (scpiCredit.enabled) {
     const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
     const netShares = totalInvestment;
-    const monthlyRevalo = 0.01 / 12; // SCPI_REVALUATION
+    const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
     let sharesValue = netShares;
     const months = years * 12;
     for (let m = 0; m < months; m++) {
@@ -137,43 +137,34 @@ export function computeMonthlyEffort(
   return effort;
 }
 
-export function computeTaxation(
-  type: "av" | "per",
-  gains: number,
-  totalInvested: number,
+export function simulateFeeCurves(
+  initialCapital: number,
+  monthlyContribution: number,
   years: number,
-  tmi: number,
-): { tax: number; netGains: number; details: string } {
-  if (gains <= 0) return { tax: 0, netGains: gains, details: "Pas de gains" };
-
-  if (type === "av") {
-    if (years >= 8) {
-      const abattement = 4600;
-      const taxableGains = Math.max(0, gains - abattement);
-      const tax = taxableGains * 0.247; // 7.5% IR + 17.2% PS
-      return {
-        tax: Math.round(tax),
-        netGains: Math.round(gains - tax),
-        details: `Après 8 ans : abattement 4 600 €, puis 24,7% sur ${Math.round(taxableGains)} €`,
-      };
-    } else {
-      const tax = gains * 0.30; // PFU 30%
-      return {
-        tax: Math.round(tax),
-        netGains: Math.round(gains - tax),
-        details: `Avant 8 ans : PFU 30% (flat tax)`,
-      };
+): { bankCurve: number[]; solutionCurve: number[] } {
+  const simulateCurve = (
+    entryFeesPct: number,
+    mgmtFeesPct: number,
+    ratePct: number,
+  ): number[] => {
+    const months = years * 12;
+    const monthlyRate = ratePct / 100 / 12;
+    const mgmtMonthly = mgmtFeesPct / 100 / 12;
+    let capital = initialCapital * (1 - entryFeesPct / 100);
+    const points: number[] = [capital];
+    for (let m = 1; m <= months; m++) {
+      const contrib = monthlyContribution * (1 - entryFeesPct / 100);
+      capital += contrib;
+      capital += capital * monthlyRate;
+      capital *= (1 - mgmtMonthly);
+      points.push(capital);
     }
-  }
+    return points;
+  };
 
-  // PER
-  const taxOnContributions = totalInvested * (tmi / 100);
-  const taxOnGains = gains * 0.30;
-  const totalTax = taxOnContributions + taxOnGains;
   return {
-    tax: Math.round(totalTax),
-    netGains: Math.round(gains - taxOnGains + totalInvested - taxOnContributions),
-    details: `Versements imposés à ${tmi}% (TMI), gains au PFU 30%`,
+    bankCurve: simulateCurve(BANK_ENTRY_FEES, BANK_MGMT_FEES, BANK_RATE),
+    solutionCurve: simulateCurve(SOLUTION_ENTRY_FEES, SOLUTION_MGMT_FEES, SOLUTION_RATE),
   };
 }
 

@@ -6,7 +6,6 @@ import type { AggregatedResults } from "@/lib/types";
 
 interface RecapTableProps {
   results: AggregatedResults;
-  years: number;
 }
 
 function RecapTableInner({ results }: RecapTableProps) {

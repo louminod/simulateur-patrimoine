@@ -6,53 +6,34 @@ import {
   Tooltip as RTooltip, ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import { fmt } from "@/lib/formatters";
+import { simulateFeeCurves } from "@/lib/simulation";
+import {
+  BANK_ENTRY_FEES, BANK_MGMT_FEES, BANK_RATE,
+  SOLUTION_ENTRY_FEES, SOLUTION_MGMT_FEES, SOLUTION_RATE,
+  FEE_COMPARISON_YEARS,
+} from "@/lib/constants";
 
 interface FeeComparisonProps {
   label: string;
   icon: string;
   initialCapital: number;
   monthlyContribution: number;
-  years: number;
   gradient: string;
   borderColor: string;
-}
-
-function simulateCurve(
-  initialCapital: number,
-  monthlyContribution: number,
-  years: number,
-  entryFeesPct: number,
-  mgmtFeesPct: number,
-  ratePct: number,
-): number[] {
-  const months = years * 12;
-  const monthlyRate = ratePct / 100 / 12;
-  const mgmtMonthly = mgmtFeesPct / 100 / 12;
-  let capital = initialCapital * (1 - entryFeesPct / 100);
-  const points: number[] = [capital];
-  for (let m = 1; m <= months; m++) {
-    const contrib = monthlyContribution * (1 - entryFeesPct / 100);
-    capital += contrib;
-    capital += capital * monthlyRate;
-    capital *= (1 - mgmtMonthly);
-    points.push(capital);
-  }
-  return points;
 }
 
 interface FeeRow {
   label: string;
   banker: string;
   solution: string;
-  /** "advantage" = our value is better, "disadvantage" = theirs is better, "neutral" = same */
   verdict: "advantage" | "disadvantage" | "neutral";
 }
 
 const fees: FeeRow[] = [
-  { label: "Frais d'entrée versement initial", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
-  { label: "Frais d'entrée versements programmés", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
-  { label: "Frais de gestion annuels", banker: "1,5%", solution: "1%", verdict: "advantage" },
-  { label: "Taux de rentabilité", banker: "2%", solution: "4%", verdict: "advantage" },
+  { label: "Frais d'entrée versement initial", banker: `${BANK_ENTRY_FEES}%`, solution: `${SOLUTION_ENTRY_FEES}%`, verdict: "disadvantage" },
+  { label: "Frais d'entrée versements programmés", banker: `${BANK_ENTRY_FEES}%`, solution: `${SOLUTION_ENTRY_FEES}%`, verdict: "disadvantage" },
+  { label: "Frais de gestion annuels", banker: `${BANK_MGMT_FEES}%`, solution: `${SOLUTION_MGMT_FEES}%`, verdict: "advantage" },
+  { label: "Taux de rentabilité", banker: `${BANK_RATE}%`, solution: `${SOLUTION_RATE}%`, verdict: "advantage" },
 ];
 
 const verdictColor: Record<FeeRow["verdict"], string> = {
@@ -61,17 +42,15 @@ const verdictColor: Record<FeeRow["verdict"], string> = {
   neutral: "text-white",
 };
 
-const COMPARISON_YEARS = 15;
+function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, gradient, borderColor }: FeeComparisonProps) {
+  const years = FEE_COMPARISON_YEARS;
 
-function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years: _years, gradient, borderColor }: FeeComparisonProps) {
-  const years = COMPARISON_YEARS;
   const chartData = useMemo(() => {
-    const bankerCurve = simulateCurve(initialCapital, monthlyContribution, years, 2, 1.5, 2);
-    const solutionCurve = simulateCurve(initialCapital, monthlyContribution, years, 4.8, 1, 4);
+    const { bankCurve, solutionCurve } = simulateFeeCurves(initialCapital, monthlyContribution, years);
     const months = years * 12;
     return Array.from({ length: months + 1 }, (_, i) => ({
       month: i,
-      "Votre banque": Math.round(bankerCurve[i]),
+      "Votre banque": Math.round(bankCurve[i]),
       "Notre solution": Math.round(solutionCurve[i]),
     }));
   }, [initialCapital, monthlyContribution, years]);
@@ -80,7 +59,6 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
   const solutionFinal = chartData[chartData.length - 1]["Notre solution"];
   const diff = solutionFinal - bankerFinal;
 
-  // Find crossover month (when our solution surpasses the bank)
   const crossoverMonth = useMemo(() => {
     for (let i = 1; i < chartData.length; i++) {
       if (chartData[i]["Notre solution"] >= chartData[i]["Votre banque"]) return i;
@@ -93,14 +71,12 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
     <div className={`bg-[var(--card)] rounded-2xl border ${borderColor} p-4 md:p-6`}>
       <h3 className="text-sm font-semibold mb-3 text-white">{icon} Comparatif {label} — Banque vs Notre solution</h3>
 
-      {/* Explanation */}
       <div className={`bg-gradient-to-r ${gradient} border ${borderColor} rounded-xl px-3 py-2.5 mb-4`}>
         <p className="text-[11px] text-white/80 leading-relaxed">
           💡 Des frais d&apos;entrée plus élevés, mais un <strong className="text-white">rendement supérieur</strong> et des <strong className="text-white">frais de gestion réduits</strong> qui font toute la différence sur le long terme.
         </p>
       </div>
 
-      {/* Fee table */}
       <div className="overflow-x-auto mb-4">
         <table className="w-full text-xs">
           <thead>
@@ -122,7 +98,6 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
         </table>
       </div>
 
-      {/* Result highlight */}
       <div className="flex items-center justify-center gap-3 mb-4 py-3 rounded-xl bg-white/[0.03] border border-white/5">
         <div className="text-center">
           <p className="text-[10px] text-[var(--muted)]">Banque à {years} ans</p>
@@ -138,16 +113,14 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
         </div>
       </div>
 
-      {/* Crossover callout */}
       {crossoverYears !== null && (
         <div className="mb-4 bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-[var(--muted)] leading-relaxed">
-            📉 La banque mène les <strong className="text-red-400">{crossoverYears !== null && crossoverYears < 1 ? `${crossoverMonth} premiers mois` : `${crossoverYears?.toFixed(1).replace('.0', '')} premières années`}</strong>, puis notre solution prend le dessus et <strong className="text-emerald-400">l&apos;écart ne cesse de grandir</strong>. 🚀
+            📉 La banque mène les <strong className="text-red-400">{crossoverYears < 1 ? `${crossoverMonth} premiers mois` : `${crossoverYears.toFixed(1).replace('.0', '')} premières années`}</strong>, puis notre solution prend le dessus et <strong className="text-emerald-400">l&apos;écart ne cesse de grandir</strong>. 🚀
           </p>
         </div>
       )}
 
-      {/* Comparison chart */}
       <p className="text-[11px] text-[var(--muted)] mb-3">Évolution comparative sur {years} ans</p>
       <div className="h-[200px] md:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">

@@ -1,10 +1,17 @@
 import type { EnvelopeConfig, SCPICreditConfig } from "./types";
 
-export const AV_PER_ENTRY_FEES = 4.8;
-export const AV_PER_MGMT_FEES = 1;
 export const LIVRET_RATE = 1;
 export const SCPI_REVALUATION = 1;
 export const TMI_OPTIONS = [11, 30, 41, 45] as const;
+
+// Fee comparison: bank vs our solution
+export const BANK_ENTRY_FEES = 2;
+export const BANK_MGMT_FEES = 1.5;
+export const BANK_RATE = 2;
+export const SOLUTION_ENTRY_FEES = 4.8;
+export const SOLUTION_MGMT_FEES = 1;
+export const SOLUTION_RATE = 4;
+export const FEE_COMPARISON_YEARS = 15;
 
 export const defaultSCPI: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 5.5,
