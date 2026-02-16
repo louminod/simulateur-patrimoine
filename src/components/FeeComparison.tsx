@@ -52,7 +52,7 @@ const fees: FeeRow[] = [
   { label: "Frais d'entrée versement initial", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
   { label: "Frais d'entrée versements programmés", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
   { label: "Frais de gestion annuels", banker: "1,5%", solution: "1%", verdict: "advantage" },
-  { label: "Taux de rentabilité", banker: "2%", solution: "4,8%", verdict: "advantage" },
+  { label: "Taux de rentabilité", banker: "2%", solution: "4%", verdict: "advantage" },
 ];
 
 const verdictColor: Record<FeeRow["verdict"], string> = {
@@ -64,7 +64,7 @@ const verdictColor: Record<FeeRow["verdict"], string> = {
 function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years, gradient, borderColor }: FeeComparisonProps) {
   const chartData = useMemo(() => {
     const bankerCurve = simulateCurve(initialCapital, monthlyContribution, years, 2, 1.5, 2);
-    const solutionCurve = simulateCurve(initialCapital, monthlyContribution, years, 4.8, 1, 4.8);
+    const solutionCurve = simulateCurve(initialCapital, monthlyContribution, years, 4.8, 1, 4);
     const months = years * 12;
     return Array.from({ length: months + 1 }, (_, i) => ({
       month: i,
