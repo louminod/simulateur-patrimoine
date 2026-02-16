@@ -68,18 +68,18 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
     const months = years * 12;
     return Array.from({ length: months + 1 }, (_, i) => ({
       month: i,
-      "Votre banquier": Math.round(bankerCurve[i]),
+      "Votre banque": Math.round(bankerCurve[i]),
       "Notre solution": Math.round(solutionCurve[i]),
     }));
   }, [initialCapital, monthlyContribution, years]);
 
-  const bankerFinal = chartData[chartData.length - 1]["Votre banquier"];
+  const bankerFinal = chartData[chartData.length - 1]["Votre banque"];
   const solutionFinal = chartData[chartData.length - 1]["Notre solution"];
   const diff = solutionFinal - bankerFinal;
 
   return (
     <div className={`bg-[var(--card)] rounded-2xl border ${borderColor} p-4 md:p-6`}>
-      <h3 className="text-sm font-semibold mb-3 text-white">{icon} Comparatif {label} — Banquier vs Notre solution</h3>
+      <h3 className="text-sm font-semibold mb-3 text-white">{icon} Comparatif {label} — Banque vs Notre solution</h3>
 
       {/* Explanation */}
       <div className={`bg-gradient-to-r ${gradient} border ${borderColor} rounded-xl px-3 py-2.5 mb-4`}>
@@ -94,7 +94,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
           <thead>
             <tr className="border-b border-white/10">
               <th className="text-left py-2 text-[var(--muted)] font-medium"></th>
-              <th className="text-center py-2 text-red-400 font-semibold">Votre banquier</th>
+              <th className="text-center py-2 text-red-400 font-semibold">Votre banque</th>
               <th className="text-center py-2 font-semibold text-white">Notre solution</th>
             </tr>
           </thead>
@@ -113,7 +113,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
       {/* Result highlight */}
       <div className="flex items-center justify-center gap-3 mb-4 py-3 rounded-xl bg-white/[0.03] border border-white/5">
         <div className="text-center">
-          <p className="text-[10px] text-[var(--muted)]">Banquier à {years} ans</p>
+          <p className="text-[10px] text-[var(--muted)]">Banque à {years} ans</p>
           <p className="text-sm font-bold text-red-400">{fmt(bankerFinal)}</p>
         </div>
         <span className="text-[var(--muted)]">vs</span>
@@ -149,7 +149,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
               labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
             />
             <Legend wrapperStyle={{ fontSize: "11px" }} />
-            <Line type="monotone" dataKey="Votre banquier" stroke="#f87171" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="Votre banque" stroke="#f87171" strokeWidth={2} dot={false} />
             <Line type="monotone" dataKey="Notre solution" stroke="#34d399" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
