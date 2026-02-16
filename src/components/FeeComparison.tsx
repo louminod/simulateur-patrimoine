@@ -126,11 +126,11 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 25, right: 10, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id={`gSolution-${label}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={`gSolution-${label.replace(/\s/g, '')}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
                 <stop offset="100%" stopColor="#22c55e" stopOpacity={0.02} />
               </linearGradient>
-              <linearGradient id={`gBanque-${label}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={`gBanque-${label.replace(/\s/g, '')}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#f87171" stopOpacity={0.15} />
                 <stop offset="100%" stopColor="#f87171" stopOpacity={0.02} />
               </linearGradient>
@@ -162,8 +162,8 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
                 label={{ value: `↑ Inversion`, position: "top", fill: "#fbbf24", fontSize: 10, fontWeight: 600 }}
               />
             )}
-            <Area type="monotone" dataKey="Votre banque" stroke="#f87171" fill={`url(#gBanque-${label})`} strokeWidth={2} />
-            <Area type="monotone" dataKey="Notre solution" stroke="#34d399" fill={`url(#gSolution-${label})`} strokeWidth={2} />
+            <Area type="monotone" dataKey="Votre banque" stroke="#f87171" fill={`url(#gBanque-${label.replace(/\s/g, '')})`} strokeWidth={2} />
+            <Area type="monotone" dataKey="Notre solution" stroke="#34d399" fill={`url(#gSolution-${label.replace(/\s/g, '')})`} strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
