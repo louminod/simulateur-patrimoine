@@ -68,6 +68,36 @@ export default function Home() {
 
       {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
 
+      {(av.enabled || per.enabled) && (
+        <section className="mb-12">
+          <h2 className="text-lg font-bold text-white mb-6">⚖️ Pourquoi notre solution est plus performante</h2>
+          <div className={`grid ${av.enabled && per.enabled ? "md:grid-cols-2" : ""} gap-5`}>
+            {av.enabled && (
+              <FeeComparison
+                label="Assurance Vie"
+                icon="🛡️"
+                initialCapital={av.initialCapital}
+                monthlyContribution={av.monthlyContribution}
+                years={years}
+                gradient="from-cyan-500/10 to-blue-500/10"
+                borderColor="border-cyan-500/20"
+              />
+            )}
+            {per.enabled && (
+              <FeeComparison
+                label="PER"
+                icon="🎯"
+                initialCapital={per.initialCapital}
+                monthlyContribution={per.monthlyContribution}
+                years={years}
+                gradient="from-orange-500/10 to-amber-500/10"
+                borderColor="border-orange-500/20"
+              />
+            )}
+          </div>
+        </section>
+      )}
+
       <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart
@@ -75,13 +105,6 @@ export default function Home() {
         years={years}
         milestones={milestones}
       />
-      {(av.enabled || per.enabled) && (
-        <FeeComparison
-          initialCapital={av.enabled ? av.initialCapital : per.initialCapital}
-          monthlyContribution={av.enabled ? av.monthlyContribution : per.monthlyContribution}
-          years={years}
-        />
-      )}
       <RecapTable results={results} />
 
       <div className="py-6">

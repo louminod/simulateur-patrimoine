@@ -55,7 +55,6 @@ export function useSimulation(
       const interests = Math.max(0, Math.round(total) - capitalInvested);
       point["Capital investi"] = capitalInvested;
       point["Intérêts générés"] = interests;
-      point["Stratégie patrimoniale"] = Math.round(total);
       point["Livret bancaire 1%"] = Math.round(livret.dataPoints[i] ?? 0);
       return point;
     });

@@ -8,9 +8,13 @@ import {
 import { fmt } from "@/lib/formatters";
 
 interface FeeComparisonProps {
+  label: string;
+  icon: string;
   initialCapital: number;
   monthlyContribution: number;
   years: number;
+  gradient: string;
+  borderColor: string;
 }
 
 function simulateCurve(
@@ -36,14 +40,28 @@ function simulateCurve(
   return points;
 }
 
-const fees = [
-  { label: "Frais d'entrée versement initial", banker: "2%", solution: "4,8%" },
-  { label: "Frais d'entrée versements programmés", banker: "2%", solution: "4,8%" },
-  { label: "Frais de gestion annuels", banker: "1,5%", solution: "1%" },
-  { label: "Taux de rentabilité", banker: "2%", solution: "4,8%" },
+interface FeeRow {
+  label: string;
+  banker: string;
+  solution: string;
+  /** "advantage" = our value is better, "disadvantage" = theirs is better, "neutral" = same */
+  verdict: "advantage" | "disadvantage" | "neutral";
+}
+
+const fees: FeeRow[] = [
+  { label: "Frais d'entrée versement initial", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
+  { label: "Frais d'entrée versements programmés", banker: "2%", solution: "4,8%", verdict: "disadvantage" },
+  { label: "Frais de gestion annuels", banker: "1,5%", solution: "1%", verdict: "advantage" },
+  { label: "Taux de rentabilité", banker: "2%", solution: "4,8%", verdict: "advantage" },
 ];
 
-function FeeComparisonInner({ initialCapital, monthlyContribution, years }: FeeComparisonProps) {
+const verdictColor: Record<FeeRow["verdict"], string> = {
+  advantage: "text-emerald-400",
+  disadvantage: "text-amber-400",
+  neutral: "text-white",
+};
+
+function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years, gradient, borderColor }: FeeComparisonProps) {
   const chartData = useMemo(() => {
     const bankerCurve = simulateCurve(initialCapital, monthlyContribution, years, 2, 1.5, 2);
     const solutionCurve = simulateCurve(initialCapital, monthlyContribution, years, 4.8, 1, 4.8);
@@ -55,63 +73,88 @@ function FeeComparisonInner({ initialCapital, monthlyContribution, years }: FeeC
     }));
   }, [initialCapital, monthlyContribution, years]);
 
+  const bankerFinal = chartData[chartData.length - 1]["Votre banquier"];
+  const solutionFinal = chartData[chartData.length - 1]["Ma solution (Finzzle)"];
+  const diff = solutionFinal - bankerFinal;
+
   return (
-    <section className="mb-8">
-      <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-4 md:p-6">
-        <h2 className="text-sm font-semibold mb-4 text-white">⚖️ Comparatif des frais — Banquier vs Ma solution</h2>
+    <div className={`bg-[var(--card)] rounded-2xl border ${borderColor} p-4 md:p-6`}>
+      <h3 className="text-sm font-semibold mb-3 text-white">{icon} Comparatif {label} — Banquier vs Ma solution</h3>
 
-        {/* Fee table */}
-        <div className="overflow-x-auto mb-6">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left py-2 text-[var(--muted)] font-medium"></th>
-                <th className="text-center py-2 text-red-400 font-semibold">Votre banquier</th>
-                <th className="text-center py-2 text-emerald-400 font-semibold">Ma solution (Finzzle)</th>
+      {/* Explanation */}
+      <div className={`bg-gradient-to-r ${gradient} border ${borderColor} rounded-xl px-3 py-2.5 mb-4`}>
+        <p className="text-[11px] text-white/80 leading-relaxed">
+          💡 Des frais d&apos;entrée plus élevés, mais un <strong className="text-white">rendement supérieur</strong> et des <strong className="text-white">frais de gestion réduits</strong> qui font toute la différence sur le long terme.
+        </p>
+      </div>
+
+      {/* Fee table */}
+      <div className="overflow-x-auto mb-4">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-white/10">
+              <th className="text-left py-2 text-[var(--muted)] font-medium"></th>
+              <th className="text-center py-2 text-red-400 font-semibold">Votre banquier</th>
+              <th className="text-center py-2 font-semibold text-white">Ma solution (Finzzle)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {fees.map((f) => (
+              <tr key={f.label} className="border-b border-white/5">
+                <td className="py-2.5 text-[var(--muted)]">{f.label}</td>
+                <td className="py-2.5 text-center text-red-400 font-medium">{f.banker}</td>
+                <td className={`py-2.5 text-center font-medium ${verdictColor[f.verdict]}`}>{f.solution}</td>
               </tr>
-            </thead>
-            <tbody>
-              {fees.map((f) => (
-                <tr key={f.label} className="border-b border-white/5">
-                  <td className="py-2.5 text-[var(--muted)]">{f.label}</td>
-                  <td className="py-2.5 text-center text-red-400 font-medium">{f.banker}</td>
-                  <td className="py-2.5 text-center text-emerald-400 font-medium">{f.solution}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-        {/* Comparison chart */}
-        <p className="text-[11px] text-[var(--muted)] mb-3">Valeur de rachat sur {years} ans</p>
-        <div className="h-[220px] md:h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
-              <XAxis
-                dataKey="month"
-                tickFormatter={(m: number) => `${Math.floor(m / 12)}a`}
-                stroke="#4a4a6a" fontSize={9}
-                interval={Math.max(1, Math.floor((years * 12) / 6))}
-              />
-              <YAxis
-                stroke="#4a4a6a" fontSize={9}
-                tickFormatter={(v: number) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`}
-                width={45}
-              />
-              <RTooltip
-                contentStyle={{ background: "#16161f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", fontSize: "12px" }}
-                formatter={(value: unknown) => fmt(Number(value))}
-                labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
-              />
-              <Legend wrapperStyle={{ fontSize: "11px" }} />
-              <Line type="monotone" dataKey="Votre banquier" stroke="#f87171" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="Ma solution (Finzzle)" stroke="#34d399" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+      {/* Result highlight */}
+      <div className="flex items-center justify-center gap-3 mb-4 py-3 rounded-xl bg-white/[0.03] border border-white/5">
+        <div className="text-center">
+          <p className="text-[10px] text-[var(--muted)]">Banquier à {years} ans</p>
+          <p className="text-sm font-bold text-red-400">{fmt(bankerFinal)}</p>
+        </div>
+        <span className="text-[var(--muted)]">vs</span>
+        <div className="text-center">
+          <p className="text-[10px] text-[var(--muted)]">Ma solution à {years} ans</p>
+          <p className="text-sm font-bold text-emerald-400">{fmt(solutionFinal)}</p>
+        </div>
+        <div className="text-center ml-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-1.5">
+          <p className="text-xs font-bold text-emerald-400">+{fmt(diff)}</p>
         </div>
       </div>
-    </section>
+
+      {/* Comparison chart */}
+      <p className="text-[11px] text-[var(--muted)] mb-3">Évolution comparative sur {years} ans</p>
+      <div className="h-[200px] md:h-[280px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+            <XAxis
+              dataKey="month"
+              tickFormatter={(m: number) => `${Math.floor(m / 12)}a`}
+              stroke="#4a4a6a" fontSize={9}
+              interval={Math.max(1, Math.floor((years * 12) / 6))}
+            />
+            <YAxis
+              stroke="#4a4a6a" fontSize={9}
+              tickFormatter={(v: number) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`}
+              width={45}
+            />
+            <RTooltip
+              contentStyle={{ background: "#16161f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", fontSize: "12px" }}
+              formatter={(value: unknown) => fmt(Number(value))}
+              labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
+            />
+            <Legend wrapperStyle={{ fontSize: "11px" }} />
+            <Line type="monotone" dataKey="Votre banquier" stroke="#f87171" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="Ma solution (Finzzle)" stroke="#34d399" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
 
