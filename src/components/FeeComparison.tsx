@@ -2,7 +2,7 @@
 
 import { memo, useMemo } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip as RTooltip, ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import { fmt } from "@/lib/formatters";
@@ -151,7 +151,17 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
       <p className="text-[11px] text-[var(--muted)] mb-3">Évolution comparative sur {years} ans</p>
       <div className="h-[200px] md:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 25, right: 10, left: 0, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 25, right: 10, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id={`gSolution-${label}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity={0.02} />
+              </linearGradient>
+              <linearGradient id={`gBanque-${label}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f87171" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="#f87171" stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
             <XAxis
               dataKey="month"
@@ -179,9 +189,9 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
                 label={{ value: `↑ Inversion`, position: "top", fill: "#fbbf24", fontSize: 10, fontWeight: 600 }}
               />
             )}
-            <Line type="monotone" dataKey="Votre banque" stroke="#f87171" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="Notre solution" stroke="#34d399" strokeWidth={2} dot={false} />
-          </LineChart>
+            <Area type="monotone" dataKey="Votre banque" stroke="#f87171" fill={`url(#gBanque-${label})`} strokeWidth={2} />
+            <Area type="monotone" dataKey="Notre solution" stroke="#34d399" fill={`url(#gSolution-${label})`} strokeWidth={2} />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>
