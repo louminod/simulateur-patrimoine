@@ -151,7 +151,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
       <p className="text-[11px] text-[var(--muted)] mb-3">Évolution comparative sur {years} ans</p>
       <div className="h-[200px] md:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <LineChart data={chartData} margin={{ top: 25, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
             <XAxis
               dataKey="month"
