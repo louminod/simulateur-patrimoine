@@ -24,8 +24,8 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
             <AreaChart data={chartData} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="gCapital" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#475569" stopOpacity={0.5} />
-                  <stop offset="100%" stopColor="#475569" stopOpacity={0.05} />
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity={0.05} />
                 </linearGradient>
                 <linearGradient id="gInterests" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#22c55e" stopOpacity={0.6} />
@@ -62,7 +62,7 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
               {/* Livret en fond */}
               <Area type="monotone" dataKey="Livret bancaire 1%" stroke="#71717a" fill="url(#gLivret)" strokeWidth={1} strokeDasharray="6 4" />
               {/* Capital investi en bas */}
-              <Area type="monotone" dataKey="Capital investi" stackId="strategy" stroke="#475569" fill="url(#gCapital)" strokeWidth={2} />
+              <Area type="monotone" dataKey="Capital investi" stackId="strategy" stroke="#6366f1" fill="url(#gCapital)" strokeWidth={2} />
               {/* Intérêts générés au dessus */}
               <Area type="monotone" dataKey="Intérêts générés" stackId="strategy" stroke="#22c55e" fill="url(#gInterests)" strokeWidth={2} />
             </AreaChart>
