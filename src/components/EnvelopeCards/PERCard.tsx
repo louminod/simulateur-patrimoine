@@ -34,7 +34,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
           <div className="flex gap-2">
             {TMI_OPTIONS.map((t) => (
               <button key={t} onClick={() => set({ tmi: t })}
-                className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.tmi === t ? "bg-gradient-to-r from-[var(--orange)] to-amber-400 text-white" : "bg-white/5 text-[var(--muted)] hover:bg-white/10"}`}>
+                className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.tmi === t ? "bg-gradient-to-r from-[var(--orange)] to-amber-400 text-white" : "bg-[var(--overlay-strong)] text-[var(--muted)] hover:bg-[var(--overlay-strong)]"}`}>
                 {t}%
               </button>
             ))}
@@ -46,7 +46,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
           Détail &amp; Personnalisation
         </button>
         {showAdvanced && (
-          <div className="pt-2 border-t border-white/5 space-y-3">
+          <div className="pt-2 border-t border-[var(--border)] space-y-3">
             <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/15 rounded-xl px-3 py-2.5">
               <p className="text-[11px] text-orange-200/80 leading-relaxed">
                 ✨ Rendement de <span className="font-semibold text-orange-300">4% net de frais</span> grâce à un accompagnement personnalisé et des arbitrages réguliers effectués par votre conseiller pour optimiser vos placements.
@@ -55,17 +55,17 @@ function PERCardInner({ config, onChange }: PERCardProps) {
                 💰 Vos versements sont <strong className="text-orange-300">déductibles de votre revenu imposable</strong>. À une TMI de 30%, un versement de 100€ ne vous coûte réellement que 70€. Plus votre TMI est élevée, plus l&apos;avantage est important.
               </p>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+            <div className="bg-[var(--overlay-strong)] rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
-                <span className="text-white">4,8%</span>
+                <span className="text-[var(--text)]">4,8%</span>
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>
-                <span className="text-white">1%</span>
+                <span className="text-[var(--text)]">1%</span>
               </div>
-              <div className="border-t border-white/5 pt-1.5 mt-1">
+              <div className="border-t border-[var(--border)] pt-1.5 mt-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>

@@ -16,13 +16,13 @@ function ResultSummaryInner({ monthlyEffort, totalFinal, monthlyIncome, hasCredi
 
   return (
     <section className="mb-8">
-      <h2 className="text-sm font-semibold text-white mb-4">🎯 Votre résultat</h2>
+      <h2 className="text-sm font-semibold text-[var(--text)] mb-4">🎯 Votre résultat</h2>
       <div className="grid md:grid-cols-2 gap-4">
         {/* Effort réel vs résultat */}
         {monthlyEffort > 0 && (
-          <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-5 text-center flex flex-col justify-center">
+          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 text-center flex flex-col justify-center">
             <p className="text-xs text-[var(--muted)] uppercase tracking-widest mb-3">Effort réel vs résultat</p>
-            <p className="text-white text-sm md:text-base leading-relaxed">
+            <p className="text-[var(--text)] text-sm md:text-base leading-relaxed">
               Pour <span className="font-bold text-[var(--accent2)]">{fmt(Math.round(monthlyEffort))}/mois</span>,
               vous constituez <span className="font-bold text-[var(--green)]">{fmt(Math.round(totalFinal))}</span>
             </p>

@@ -17,8 +17,8 @@ interface PatrimoineChartProps {
 function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineChartProps) {
   return (
     <section className="mb-8">
-      <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-4 md:p-6">
-        <h2 className="text-sm font-semibold mb-5 text-white">📈 Évolution de votre patrimoine</h2>
+      <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-4 md:p-6">
+        <h2 className="text-sm font-semibold mb-5 text-[var(--text)]">📈 Évolution de votre patrimoine</h2>
         <div className="h-[250px] md:h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
@@ -36,7 +36,7 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
                   <stop offset="100%" stopColor="#71717a" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.3} />
               <XAxis dataKey="month" tickFormatter={(m: number) => `${Math.floor(m / 12)}a`}
                 stroke="#4a4a6a" fontSize={10} tick={{ fontSize: 9 }}
                 className="text-[9px] md:text-[11px]"
@@ -45,7 +45,7 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
                 className="text-[9px] md:text-[11px]"
                 tickFormatter={(v: number) => v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`}
                 width={45} domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]} />
-              <RTooltip contentStyle={{ background: "#16161f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", fontSize: "12px" }}
+              <RTooltip contentStyle={{ background: "var(--tooltip-bg)", border: "1px solid var(--border)", borderRadius: "12px", fontSize: "12px" }}
                 formatter={(value: unknown) => fmt(Number(value))}
                 labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`} />
               <Legend wrapperStyle={{ fontSize: "11px" }} className="hidden md:block" />

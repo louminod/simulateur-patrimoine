@@ -30,7 +30,7 @@ function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockPr
             Pourquoi investir fait la différence
           </h2>
           <div className="grid md:grid-cols-3 gap-6 items-center">
-            <div className="text-center p-6 rounded-2xl bg-white/[0.03] border border-white/5">
+            <div className="text-center p-6 rounded-2xl bg-[var(--overlay)] border border-[var(--border)]">
               <p className="text-2xl mb-2">💤</p>
               <p className="text-xs text-[var(--muted)] mb-1">Livret bancaire à {LIVRET_RATE}%</p>
               <p className="text-sm text-[var(--muted)] mb-2">Votre argent dort</p>
@@ -49,8 +49,8 @@ function ComparisonBlockInner({ results, perEnabled, perTmi }: ComparisonBlockPr
             <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-[var(--accent)]/10 to-[var(--accent2)]/10 border border-[var(--accent)]/25">
               <p className="text-2xl mb-2">🚀</p>
               <p className="text-xs text-[var(--accent2)] mb-1">Stratégie patrimoniale</p>
-              <p className="text-sm text-white/70 mb-2">Patrimoine estimé</p>
-              <AnimatedNumber value={totalFinal} className="text-2xl md:text-3xl font-bold text-white" />
+              <p className="text-sm text-[var(--text)]/70 mb-2">Patrimoine estimé</p>
+              <AnimatedNumber value={totalFinal} className="text-2xl md:text-3xl font-bold text-[var(--text)]" />
               <p className="text-xs text-[var(--accent)]/70 mt-2">dont {fmt(totalFinal - totalInvested)} de gains</p>
             </div>
           </div>

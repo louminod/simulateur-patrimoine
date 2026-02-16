@@ -41,7 +41,7 @@ const fees: FeeRow[] = [
 const verdictColor: Record<FeeRow["verdict"], string> = {
   advantage: "text-emerald-400",
   disadvantage: "text-amber-400",
-  neutral: "text-white",
+  neutral: "text-[var(--text)]",
 };
 
 function ComparisonChart({ id, data, crossoverMonth }: {
@@ -64,7 +64,7 @@ function ComparisonChart({ id, data, crossoverMonth }: {
               <stop offset="100%" stopColor="#f87171" stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.3} />
           <XAxis
             dataKey="month"
             tickFormatter={(m: number) => `${Math.floor(m / 12)}a`}
@@ -77,7 +77,7 @@ function ComparisonChart({ id, data, crossoverMonth }: {
             width={45}
           />
           <RTooltip
-            contentStyle={{ background: "#16161f", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", fontSize: "12px" }}
+            contentStyle={{ background: "var(--tooltip-bg)", border: "1px solid var(--border)", borderRadius: "12px", fontSize: "12px" }}
             formatter={(value: unknown) => fmt(Number(value))}
             labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
           />
@@ -133,13 +133,13 @@ function FeeComparisonInner({ envelopes }: FeeComparisonProps) {
 
   return (
     <section className="mb-12">
-      <div className="bg-[var(--card)] rounded-2xl border border-white/5 p-4 md:p-6">
-        <h2 className="text-sm font-semibold mb-3 text-white">⚖️ Pourquoi notre solution est plus performante</h2>
+      <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-4 md:p-6">
+        <h2 className="text-sm font-semibold mb-3 text-[var(--text)]">⚖️ Pourquoi notre solution est plus performante</h2>
 
         {/* Explanation */}
         <div className="bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/15 rounded-xl px-3 py-2.5 mb-4">
-          <p className="text-[11px] text-white/80 leading-relaxed">
-            💡 Des frais d&apos;entrée plus élevés, mais un <strong className="text-white">rendement supérieur</strong> et des <strong className="text-white">frais de gestion réduits</strong> qui font toute la différence sur le long terme.
+          <p className="text-[11px] text-[var(--text)]/80 leading-relaxed">
+            💡 Des frais d&apos;entrée plus élevés, mais un <strong className="text-[var(--text)]">rendement supérieur</strong> et des <strong className="text-[var(--text)]">frais de gestion réduits</strong> qui font toute la différence sur le long terme.
           </p>
         </div>
 
@@ -147,15 +147,15 @@ function FeeComparisonInner({ envelopes }: FeeComparisonProps) {
         <div className="overflow-x-auto mb-5">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--border)]">
                 <th className="text-left py-2 text-[var(--muted)] font-medium"></th>
                 <th className="text-center py-2 text-red-400 font-semibold">Votre banque</th>
-                <th className="text-center py-2 font-semibold text-white">Notre solution</th>
+                <th className="text-center py-2 font-semibold text-[var(--text)]">Notre solution</th>
               </tr>
             </thead>
             <tbody>
               {fees.map((f) => (
-                <tr key={f.label} className="border-b border-white/5">
+                <tr key={f.label} className="border-b border-[var(--border)]">
                   <td className="py-2.5 text-[var(--muted)] max-w-[120px] sm:max-w-none">{f.label}</td>
                   <td className="py-2.5 text-center text-red-400 font-medium">{f.banker}</td>
                   <td className={`py-2.5 text-center font-medium ${verdictColor[f.verdict]}`}>{f.solution}</td>
@@ -174,8 +174,8 @@ function FeeComparisonInner({ envelopes }: FeeComparisonProps) {
                 onClick={() => setActiveTab(i)}
                 className={`flex-1 py-2.5 rounded-xl text-xs font-medium transition-all ${
                   activeTab === i
-                    ? "bg-white/10 text-white border border-white/15"
-                    : "bg-white/[0.03] text-[var(--muted)] border border-white/5 hover:bg-white/[0.06]"
+                    ? "bg-[var(--overlay-strong)] text-white border border-[var(--border)]"
+                    : "bg-[var(--overlay)] text-[var(--muted)] border border-[var(--border)] hover:bg-[var(--overlay-strong)]"
                 }`}
               >
                 {e.icon} {e.label}
@@ -185,7 +185,7 @@ function FeeComparisonInner({ envelopes }: FeeComparisonProps) {
         )}
 
         {/* Result highlight */}
-        <div className="flex items-center justify-center gap-3 mb-4 py-3 rounded-xl bg-white/[0.03] border border-white/5">
+        <div className="flex items-center justify-center gap-3 mb-4 py-3 rounded-xl bg-[var(--overlay)] border border-[var(--border)]">
           <div className="text-center">
             <p className="text-[10px] text-[var(--muted)]">Banque à {years} ans</p>
             <p className="text-sm font-bold text-red-400">{fmt(current.bankerFinal)}</p>
@@ -202,7 +202,7 @@ function FeeComparisonInner({ envelopes }: FeeComparisonProps) {
 
         {/* Crossover callout */}
         {current.crossoverYears !== null && (
-          <div className="mb-4 bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5">
+          <div className="mb-4 bg-[var(--overlay)] border border-[var(--border)] rounded-xl px-3 py-2.5">
             <p className="text-[11px] text-[var(--muted)] leading-relaxed">
               📉 La banque mène les <strong className="text-red-400">{current.crossoverYears < 1 ? `${current.crossoverMonth} premiers mois` : `${current.crossoverYears.toFixed(1).replace('.0', '')} premières années`}</strong>, puis notre solution prend le dessus et <strong className="text-emerald-400">l&apos;écart ne cesse de grandir</strong>. 🚀
             </p>

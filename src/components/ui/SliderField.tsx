@@ -22,7 +22,7 @@ function SliderFieldInner({ label, value, onChange, min, max, step, suffix, tip 
           {label}
           {tip && <Tip text={tip} />}
         </label>
-        <div className="flex items-center gap-1 bg-white/5 rounded-lg px-3 py-1.5 border border-white/5">
+        <div className="flex items-center gap-1 bg-[var(--overlay-strong)] rounded-lg px-3 py-1.5 border border-[var(--border)]">
           <input
             type="number"
             value={value}
@@ -31,7 +31,7 @@ function SliderFieldInner({ label, value, onChange, min, max, step, suffix, tip 
             max={max}
             step={step ?? 1}
             aria-label={label}
-            className="bg-transparent outline-none w-20 text-right text-sm font-semibold text-white"
+            className="bg-transparent outline-none w-20 text-right text-sm font-semibold text-[var(--text)]"
           />
           {suffix && <span className="text-xs text-[var(--muted)] ml-0.5">{suffix}</span>}
         </div>

@@ -19,14 +19,14 @@ function CompactFieldInner({ label, value, onChange, suffix, step, tip }: Compac
         {label}
         {tip && <Tip text={tip} />}
       </label>
-      <div className="flex items-center gap-1 bg-white/5 border border-white/5 rounded-lg px-3 py-2">
+      <div className="flex items-center gap-1 bg-[var(--overlay-strong)] border border-[var(--border)] rounded-lg px-3 py-2">
         <input
           type="number"
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
           step={step ?? 1}
           aria-label={label}
-          className="bg-transparent outline-none w-full text-sm text-white"
+          className="bg-transparent outline-none w-full text-sm text-[var(--text)]"
         />
         {suffix && <span className="text-xs text-[var(--muted)]">{suffix}</span>}
       </div>

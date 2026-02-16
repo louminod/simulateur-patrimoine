@@ -33,7 +33,7 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
           Détail &amp; Personnalisation
         </button>
         {showAdvanced && (
-          <div className="space-y-3 pt-2 border-t border-white/5">
+          <div className="space-y-3 pt-2 border-t border-[var(--border)]">
             <CompactField label="Rendement" value={config.rate} onChange={(v) => set({ rate: v })} suffix="%" step={0.1} />
             <div className="flex items-center justify-between">
               <span className="text-xs text-[var(--muted)] flex items-center">
@@ -48,13 +48,13 @@ function SCPICashCardInner({ config, onChange }: SCPICashCardProps) {
                 </p>
               </div>
             )}
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+            <div className="bg-[var(--overlay-strong)] rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
-                <span className="text-white">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
+                <span className="text-[var(--text)]">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
               </div>
-              <div className="border-t border-white/5 pt-1.5 mt-1 space-y-1">
+              <div className="border-t border-[var(--border)] pt-1.5 mt-1 space-y-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais de gestion supplémentaire, de sortie ni de rachat</p>
                 <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué. Ex : pour 50 000€ investis qui deviennent 85 000€ après 25 ans, les frais ne portent que sur les 50 000€ initiaux (soit 5 000€), et non sur les 85 000€ constitués.</p>
               </div>

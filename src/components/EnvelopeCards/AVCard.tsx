@@ -31,23 +31,23 @@ function AVCardInner({ config, onChange }: AVCardProps) {
           Détail &amp; Personnalisation
         </button>
         {showAdvanced && (
-          <div className="pt-2 border-t border-white/5 space-y-3">
+          <div className="pt-2 border-t border-[var(--border)] space-y-3">
             <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/15 rounded-xl px-3 py-2.5">
               <p className="text-[11px] text-cyan-200/80 leading-relaxed">
                 ✨ Rendement de <span className="font-semibold text-cyan-300">4% net de frais</span> grâce à un accompagnement personnalisé et des arbitrages réguliers effectués par votre conseiller pour optimiser vos placements.
               </p>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+            <div className="bg-[var(--overlay-strong)] rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
-                <span className="text-white">4,8%</span>
+                <span className="text-[var(--text)]">4,8%</span>
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>
-                <span className="text-white">1%</span>
+                <span className="text-[var(--text)]">1%</span>
               </div>
-              <div className="border-t border-white/5 pt-1.5 mt-1">
+              <div className="border-t border-[var(--border)] pt-1.5 mt-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
               </div>
             </div>

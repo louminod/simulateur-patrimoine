@@ -32,16 +32,16 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
           <CompactField label="Montant emprunté" value={config.loanAmount} onChange={(v) => set({ loanAmount: v })} suffix="€" />
           <CompactField label="Apport personnel" value={config.downPayment} onChange={(v) => set({ downPayment: v })} suffix="€" />
         </div>
-        <div className="bg-white/5 rounded-xl p-3 space-y-2">
+        <div className="bg-[var(--overlay-strong)] rounded-xl p-3 space-y-2">
           <div className="flex justify-between text-xs">
             <span className="text-[var(--muted)]">Mensualité prêt</span>
-            <span className="text-white font-medium">{fmt(payment)}/mois</span>
+            <span className="text-[var(--text)] font-medium">{fmt(payment)}/mois</span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-[var(--muted)]">Revenus passifs</span>
             <span className="text-[var(--green)] font-medium">+{fmt(monthlyDiv)}/mois</span>
           </div>
-          <div className="border-t border-white/10 pt-2 flex justify-between text-xs">
+          <div className="border-t border-[var(--border)] pt-2 flex justify-between text-xs">
             <span className="font-medium text-[var(--muted)]">Votre effort réel</span>
             <span className={`font-bold ${cashflow >= 0 ? "text-[var(--green)]" : "text-[var(--orange)]"}`}>
               {cashflow >= 0 ? "+" : ""}{fmt(cashflow)}/mois
@@ -54,7 +54,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
           Détail &amp; Personnalisation
         </button>
         {showAdvanced && (
-          <div className="space-y-3 pt-2 border-t border-white/5">
+          <div className="space-y-3 pt-2 border-t border-[var(--border)]">
             <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
               <p className="text-xs text-emerald-300 font-medium mb-1">💡 Avantage fiscal</p>
               <p className="text-xs text-emerald-200/80 leading-relaxed">
@@ -70,19 +70,19 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
               <div className="flex gap-1">
                 {[10, 15, 20, 25].map((y) => (
                   <button key={y} onClick={() => set({ loanYears: y })}
-                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.loanYears === y ? "bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] text-white" : "bg-white/5 text-[var(--muted)] hover:bg-white/10"}`}>
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${config.loanYears === y ? "bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] text-white" : "bg-[var(--overlay-strong)] text-[var(--muted)] hover:bg-[var(--overlay-strong)]"}`}>
                     {y}a
                   </button>
                 ))}
               </div>
             </div>
-            <div className="bg-white/5 rounded-lg p-2.5 space-y-1.5">
+            <div className="bg-[var(--overlay-strong)] rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
-                <span className="text-white">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
+                <span className="text-[var(--text)]">~10% <span className="text-emerald-400 ml-1">— moyenne du marché</span></span>
               </div>
-              <div className="border-t border-white/5 pt-1.5 mt-1 space-y-1">
+              <div className="border-t border-[var(--border)] pt-1.5 mt-1 space-y-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais de gestion supplémentaire, de sortie ni de rachat</p>
                 <p className="text-[10px] text-[var(--muted)]">Les frais d&apos;entrée sont payés uniquement à la revente des parts (si revente il y a). Ils s&apos;appliquent sur le capital investi, pas sur le capital constitué. Ex : pour 50 000€ investis qui deviennent 85 000€ après 25 ans, les frais ne portent que sur les 50 000€ initiaux (soit 5 000€), et non sur les 85 000€ constitués.</p>
               </div>

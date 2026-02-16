@@ -57,7 +57,7 @@ export default function Home() {
       <HorizonSlider years={years} onChange={(v) => { setYears(v); if (horizonTimer.current) clearTimeout(horizonTimer.current); horizonTimer.current = setTimeout(() => track("horizon_changed", { years: String(v) }), 500); }} />
 
       <section className="mb-12">
-        <h2 className="text-lg font-bold text-white mb-6">Choisissez vos enveloppes</h2>
+        <h2 className="text-lg font-bold text-[var(--text)] mb-6">Choisissez vos enveloppes</h2>
         <div className="grid md:grid-cols-2 gap-5">
           <SCPICashCard config={scpi} onChange={setScpi} />
           <SCPICreditCard config={scpiCredit} onChange={setScpiCredit} />
@@ -91,7 +91,7 @@ export default function Home() {
         <ShareButton buildUrl={buildShareUrl} />
       </div>
 
-      <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-white/5 space-y-1">
+      <footer className="text-center text-xs text-[var(--muted)] py-8 border-t border-[var(--border)] space-y-1">
         <p>Simulation à titre indicatif — Les performances passées ne préjugent pas des performances futures.</p>
         <p>Les investissements comportent des risques, notamment de perte en capital.</p>
       </footer>
