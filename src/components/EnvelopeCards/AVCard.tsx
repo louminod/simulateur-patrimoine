@@ -45,7 +45,7 @@ function AVCardInner({ config, onChange }: AVCardProps) {
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>
-                <span className="text-white">1% <span className="text-emerald-400 ml-1">— inférieur à la moyenne (1,5-2%)</span></span>
+                <span className="text-white">1%</span>
               </div>
               <div className="border-t border-white/5 pt-1.5 mt-1">
                 <p className="text-[10px] text-emerald-400/80">✓ Aucun frais d&apos;arbitrage, de sortie, de rachat ni de frais sur la rentabilité</p>
