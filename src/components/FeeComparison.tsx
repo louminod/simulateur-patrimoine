@@ -61,7 +61,7 @@ const verdictColor: Record<FeeRow["verdict"], string> = {
   neutral: "text-white",
 };
 
-const COMPARISON_YEARS = 10;
+const COMPARISON_YEARS = 15;
 
 function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years: _years, gradient, borderColor }: FeeComparisonProps) {
   const years = COMPARISON_YEARS;
