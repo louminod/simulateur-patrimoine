@@ -1,6 +1,6 @@
 import type { EnvelopeConfig, SCPICreditConfig } from "./types";
 
-export const AV_PER_ENTRY_FEES = 4;
+export const AV_PER_ENTRY_FEES = 4.8;
 export const AV_PER_MGMT_FEES = 1;
 export const LIVRET_RATE = 1;
 export const SCPI_REVALUATION = 1;
@@ -17,10 +17,10 @@ export const defaultSCPICredit: SCPICreditConfig = {
 
 export const defaultAV: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 4,
-  reinvestDividends: false, entryFees: 4, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
+  reinvestDividends: false, entryFees: 4.8, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
 };
 
 export const defaultPER: EnvelopeConfig = {
   enabled: true, initialCapital: 5000, monthlyContribution: 150, rate: 4,
-  reinvestDividends: false, entryFees: 4, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
+  reinvestDividends: false, entryFees: 4.8, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
 };

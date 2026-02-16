@@ -15,6 +15,7 @@ import { PatrimoineChart } from "@/components/PatrimoineChart";
 import { RecapTable } from "@/components/RecapTable";
 import { ShareButton } from "@/components/ShareButton";
 import { ResultSummary } from "@/components/ResultSummary";
+import { FeeComparison } from "@/components/FeeComparison";
 
 export default function Home() {
   const [years, setYears] = useState(25);
@@ -74,6 +75,13 @@ export default function Home() {
         years={years}
         milestones={milestones}
       />
+      {(av.enabled || per.enabled) && (
+        <FeeComparison
+          initialCapital={av.enabled ? av.initialCapital : per.initialCapital}
+          monthlyContribution={av.enabled ? av.monthlyContribution : per.monthlyContribution}
+          years={years}
+        />
+      )}
       <RecapTable results={results} />
 
       <div className="py-6">

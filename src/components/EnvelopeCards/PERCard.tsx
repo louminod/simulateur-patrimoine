@@ -59,7 +59,7 @@ function PERCardInner({ config, onChange }: PERCardProps) {
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais d&apos;entrée</span>
-                <span className="text-white">4% <span className="text-emerald-400 ml-1">— parmi les plus bas du marché</span></span>
+                <span className="text-white">4,8% <span className="text-emerald-400 ml-1">— parmi les plus bas du marché</span></span>
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-[var(--muted)]">Frais de gestion annuels</span>

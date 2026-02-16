@@ -23,19 +23,17 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 40, right: 10, left: 0, bottom: 0 }}>
               <defs>
-                <linearGradient id="gStrategy" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#7c5cfc" stopOpacity={0.6} />
-                  <stop offset="40%" stopColor="#38bdf8" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="#7c5cfc" stopOpacity={0.05} />
+                <linearGradient id="gCapital" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#475569" stopOpacity={0.5} />
+                  <stop offset="100%" stopColor="#475569" stopOpacity={0.05} />
+                </linearGradient>
+                <linearGradient id="gInterests" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.6} />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity={0.05} />
                 </linearGradient>
                 <linearGradient id="gLivret" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#71717a" stopOpacity={0.08} />
                   <stop offset="100%" stopColor="#71717a" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="gDiff" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.35} />
-                  <stop offset="50%" stopColor="#22c55e" stopOpacity={0.15} />
-                  <stop offset="100%" stopColor="#22c55e" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
@@ -61,10 +59,12 @@ function PatrimoineChartInner({ chartData, years, milestones = [] }: PatrimoineC
                   label={{ value: ms.label, position: "top", fill: ms.color, fontSize: 10, opacity: 0.8 }}
                 />
               ))}
-              {/* Livret en fond d'abord */}
+              {/* Livret en fond */}
               <Area type="monotone" dataKey="Livret bancaire 1%" stroke="#71717a" fill="url(#gLivret)" strokeWidth={1} strokeDasharray="6 4" />
-              {/* Zone de différence : la stratégie remplit avec du vert au-dessus du livret */}
-              <Area type="monotone" dataKey="Stratégie patrimoniale" stroke="#7c5cfc" fill="url(#gDiff)" strokeWidth={3} />
+              {/* Capital investi en bas */}
+              <Area type="monotone" dataKey="Capital investi" stackId="strategy" stroke="#475569" fill="url(#gCapital)" strokeWidth={2} />
+              {/* Intérêts générés au dessus */}
+              <Area type="monotone" dataKey="Intérêts générés" stackId="strategy" stroke="#22c55e" fill="url(#gInterests)" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

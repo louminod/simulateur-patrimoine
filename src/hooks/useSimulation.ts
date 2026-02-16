@@ -34,7 +34,27 @@ export function useSimulation(
     const chartData = Array.from({ length: months + 1 }, (_, i) => {
       const point: Record<string, number | string> = { month: i };
       let total = 0;
-      sims.forEach((s) => { const val = s.result.dataPoints[i] ?? 0; point[s.label] = Math.round(val); total += val; });
+      let totalInvestedAtMonth = 0;
+      sims.forEach((s) => {
+        const val = s.result.dataPoints[i] ?? 0;
+        point[s.label] = Math.round(val);
+        total += val;
+      });
+      // Calculate progressive totalInvested for each active envelope
+      if (scpi.enabled) totalInvestedAtMonth += scpi.initialCapital + scpi.monthlyContribution * i;
+      if (scpiCredit.enabled) {
+        const payment = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+        const netS = (scpiCredit.loanAmount + scpiCredit.downPayment) * (1 - scpiCredit.entryFees / 100);
+        const div = netS * (scpiCredit.rate / 100) / 12;
+        const effort = Math.max(0, payment - div);
+        totalInvestedAtMonth += scpiCredit.downPayment + effort * i;
+      }
+      if (av.enabled) totalInvestedAtMonth += av.initialCapital + av.monthlyContribution * i;
+      if (per.enabled) totalInvestedAtMonth += per.initialCapital + per.monthlyContribution * i;
+      const capitalInvested = Math.min(Math.round(totalInvestedAtMonth), Math.round(total));
+      const interests = Math.max(0, Math.round(total) - capitalInvested);
+      point["Capital investi"] = capitalInvested;
+      point["Intérêts générés"] = interests;
       point["Stratégie patrimoniale"] = Math.round(total);
       point["Livret bancaire 1%"] = Math.round(livret.dataPoints[i] ?? 0);
       return point;
