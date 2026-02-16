@@ -61,7 +61,10 @@ const verdictColor: Record<FeeRow["verdict"], string> = {
   neutral: "text-white",
 };
 
-function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years, gradient, borderColor }: FeeComparisonProps) {
+const COMPARISON_YEARS = 10;
+
+function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, years: _years, gradient, borderColor }: FeeComparisonProps) {
+  const years = COMPARISON_YEARS;
   const chartData = useMemo(() => {
     const bankerCurve = simulateCurve(initialCapital, monthlyContribution, years, 2, 1.5, 2);
     const solutionCurve = simulateCurve(initialCapital, monthlyContribution, years, 4.8, 1, 4);
