@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip as RTooltip, ResponsiveContainer, Legend,
+  Tooltip as RTooltip, ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import { fmt } from "@/lib/formatters";
 
@@ -80,6 +80,15 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
   const solutionFinal = chartData[chartData.length - 1]["Notre solution"];
   const diff = solutionFinal - bankerFinal;
 
+  // Find crossover month (when our solution surpasses the bank)
+  const crossoverMonth = useMemo(() => {
+    for (let i = 1; i < chartData.length; i++) {
+      if (chartData[i]["Notre solution"] >= chartData[i]["Votre banque"]) return i;
+    }
+    return null;
+  }, [chartData]);
+  const crossoverYears = crossoverMonth !== null ? (crossoverMonth / 12) : null;
+
   return (
     <div className={`bg-[var(--card)] rounded-2xl border ${borderColor} p-4 md:p-6`}>
       <h3 className="text-sm font-semibold mb-3 text-white">{icon} Comparatif {label} — Banque vs Notre solution</h3>
@@ -129,6 +138,16 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
         </div>
       </div>
 
+      {/* Crossover callout */}
+      {crossoverYears !== null && (
+        <div className="mb-4 bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5">
+          <p className="text-[11px] text-[var(--muted)] leading-relaxed">
+            📉 La banque est en tête les <strong className="text-red-400">{crossoverYears < 1 ? `${crossoverMonth} premiers mois` : `${crossoverYears.toFixed(1).replace('.0', '')} premières années`}</strong> grâce à des frais d&apos;entrée plus faibles.
+            Mais dès <strong className="text-emerald-400">{crossoverYears < 1 ? `le mois ${crossoverMonth}` : `l'année ${crossoverYears.toFixed(1).replace('.0', '')}`}</strong>, notre rendement supérieur et nos frais de gestion réduits inversent la tendance — et l&apos;écart ne cesse de grandir. 🚀
+          </p>
+        </div>
+      )}
+
       {/* Comparison chart */}
       <p className="text-[11px] text-[var(--muted)] mb-3">Évolution comparative sur {years} ans</p>
       <div className="h-[200px] md:h-[280px]">
@@ -152,6 +171,15 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
               labelFormatter={(m: unknown) => `Année ${(Number(m) / 12).toFixed(1)}`}
             />
             <Legend wrapperStyle={{ fontSize: "11px" }} />
+            {crossoverMonth !== null && (
+              <ReferenceLine
+                x={crossoverMonth}
+                stroke="#fbbf24"
+                strokeDasharray="4 4"
+                strokeOpacity={0.7}
+                label={{ value: `↑ Inversion`, position: "top", fill: "#fbbf24", fontSize: 10, fontWeight: 600 }}
+              />
+            )}
             <Line type="monotone" dataKey="Votre banque" stroke="#f87171" strokeWidth={2} dot={false} />
             <Line type="monotone" dataKey="Notre solution" stroke="#34d399" strokeWidth={2} dot={false} />
           </LineChart>
