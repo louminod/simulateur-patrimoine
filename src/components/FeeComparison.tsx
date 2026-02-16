@@ -142,8 +142,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
       {crossoverYears !== null && (
         <div className="mb-4 bg-white/[0.03] border border-white/5 rounded-xl px-3 py-2.5">
           <p className="text-[11px] text-[var(--muted)] leading-relaxed">
-            📉 La banque est en tête les <strong className="text-red-400">{crossoverYears < 1 ? `${crossoverMonth} premiers mois` : `${crossoverYears.toFixed(1).replace('.0', '')} premières années`}</strong> grâce à des frais d&apos;entrée plus faibles.
-            Mais dès <strong className="text-emerald-400">{crossoverYears < 1 ? `le mois ${crossoverMonth}` : `l'année ${crossoverYears.toFixed(1).replace('.0', '')}`}</strong>, notre rendement supérieur et nos frais de gestion réduits inversent la tendance — et l&apos;écart ne cesse de grandir. 🚀
+            📉 La banque mène les <strong className="text-red-400">{crossoverYears !== null && crossoverYears < 1 ? `${crossoverMonth} premiers mois` : `${crossoverYears?.toFixed(1).replace('.0', '')} premières années`}</strong>, puis notre solution prend le dessus et <strong className="text-emerald-400">l&apos;écart ne cesse de grandir</strong>. 🚀
           </p>
         </div>
       )}
