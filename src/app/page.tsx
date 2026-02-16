@@ -6,6 +6,7 @@ import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/con
 import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
 import { computePassiveIncome, computeMonthlyEffort, computeMilestones } from "@/lib/simulation";
+import { fmt } from "@/lib/formatters";
 import { Hero } from "@/components/Hero";
 import { HorizonSlider } from "@/components/HorizonSlider";
 import { SCPICashCard, SCPICreditCard, AVCard, PERCard } from "@/components/EnvelopeCards";
@@ -99,13 +100,32 @@ export default function Home() {
       )}
 
       <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
+      {/* Livret A wake-up banner */}
+      {results.totalFinal > results.livret.capital && (
+        <section className="mb-8">
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-orange-500/10 to-red-500/5" />
+            <div className="relative border border-orange-500/20 rounded-2xl px-5 py-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
+              <span className="text-3xl sm:text-4xl flex-shrink-0">💤</span>
+              <p className="text-sm md:text-base text-white/80 text-center sm:text-left leading-relaxed">
+                En laissant votre épargne sur un Livret A à 1%, vous perdez{" "}
+                <span className="font-black text-lg md:text-2xl text-orange-400">
+                  {fmt(Math.round(results.totalFinal - results.livret.capital))}
+                </span>{" "}
+                de gains potentiels sur <strong className="text-white">{years} ans</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
       <PatrimoineChart
         chartData={results.chartData}
         years={years}
         milestones={milestones}
       />
-      <RecapTable results={results} />
+      <RecapTable results={results} years={years} />
 
       <div className="py-6">
         <ShareButton buildUrl={buildShareUrl} />

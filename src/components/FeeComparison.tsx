@@ -101,7 +101,7 @@ function FeeComparisonInner({ label, icon, initialCapital, monthlyContribution, 
           <tbody>
             {fees.map((f) => (
               <tr key={f.label} className="border-b border-white/5">
-                <td className="py-2.5 text-[var(--muted)]">{f.label}</td>
+                <td className="py-2.5 text-[var(--muted)] max-w-[120px] sm:max-w-none">{f.label}</td>
                 <td className="py-2.5 text-center text-red-400 font-medium">{f.banker}</td>
                 <td className={`py-2.5 text-center font-medium ${verdictColor[f.verdict]}`}>{f.solution}</td>
               </tr>
