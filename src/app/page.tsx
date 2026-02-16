@@ -71,31 +71,12 @@ export default function Home() {
       <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
 
       {(av.enabled || per.enabled) && (
-        <section className="mb-12">
-          <h2 className="text-lg font-bold text-white mb-6">⚖️ Pourquoi notre solution est plus performante</h2>
-          <div className={`grid ${av.enabled && per.enabled ? "md:grid-cols-2" : ""} gap-5`}>
-            {av.enabled && (
-              <FeeComparison
-                label="Assurance Vie"
-                icon="🛡️"
-                initialCapital={av.initialCapital}
-                monthlyContribution={av.monthlyContribution}
-                gradient="from-cyan-500/10 to-blue-500/10"
-                borderColor="border-cyan-500/20"
-              />
-            )}
-            {per.enabled && (
-              <FeeComparison
-                label="PER"
-                icon="🎯"
-                initialCapital={per.initialCapital}
-                monthlyContribution={per.monthlyContribution}
-                gradient="from-orange-500/10 to-amber-500/10"
-                borderColor="border-orange-500/20"
-              />
-            )}
-          </div>
-        </section>
+        <FeeComparison
+          envelopes={[
+            ...(av.enabled ? [{ label: "Assurance Vie", icon: "🛡️", initialCapital: av.initialCapital, monthlyContribution: av.monthlyContribution }] : []),
+            ...(per.enabled ? [{ label: "PER", icon: "🎯", initialCapital: per.initialCapital, monthlyContribution: per.monthlyContribution }] : []),
+          ]}
+        />
       )}
 
       <ComparisonBlock results={results} perEnabled={per.enabled} perTmi={per.tmi} />
