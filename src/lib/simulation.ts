@@ -9,43 +9,58 @@ export function calcLoanPayment(principal: number, annualRate: number, years: nu
   return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
+export function getInsuranceRate(age: number): number {
+  if (age <= 35) return 0.15;
+  if (age <= 45) return 0.30;
+  if (age <= 50) return 0.50;
+  return 0.70;
+}
+
 export function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "per"): SimResult {
   const months = years * 12;
   const isAVPER = type === "av" || type === "per";
-  const entryFeePct = type === "scpi" ? config.entryFees / 100 : 0;
-  const mgmtFeeMonthly = 0;
+  const entryFeeMultiplier = 1 - config.entryFees / 100;
+  const mgmtFeeMonthly = isAVPER ? config.mgmtFees / 100 / 12 : 0;
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = type === "scpi" ? SCPI_REVALUATION / 100 / 12 : 0;
-  let capital = config.initialCapital;
+  let capital = config.initialCapital * entryFeeMultiplier;
   let totalInvested = config.initialCapital;
+  let distributedDividends = 0;
   const dataPoints: number[] = [capital];
   for (let m = 1; m <= months; m++) {
-    const contribution = config.monthlyContribution;
+    const contribution = config.monthlyContribution * entryFeeMultiplier;
     capital += contribution;
     totalInvested += config.monthlyContribution;
     if (type === "scpi" && m <= config.jouissanceMonths) { dataPoints.push(capital); continue; }
     const gains = capital * monthlyRate;
-    capital += gains;
+    if (type === "scpi" && !config.reinvestDividends) {
+      // Dividends not reinvested: only revaluation grows capital
+      distributedDividends += gains;
+    } else {
+      capital += gains;
+    }
     if (isAVPER) capital *= (1 - mgmtFeeMonthly);
     if (type === "scpi") capital *= (1 + monthlyRevalo);
     dataPoints.push(capital);
   }
-  const grossGains = capital - totalInvested;
-  const netGains = grossGains;
+  const grossGains = capital + distributedDividends - totalInvested;
+  const netGains = config.socialCharges > 0 ? grossGains * (1 - config.socialCharges / 100) : grossGains;
   let perTaxSavings = 0;
   if (type === "per") {
     perTaxSavings = totalInvested * (config.tmi / 100);
   }
-  return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings };
+  return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings, distributedDividends };
 }
 
 export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number): SCPICreditResult {
   const totalInvestment = config.loanAmount + config.downPayment;
-  const netShares = totalInvestment;
-  const entryFeesAmount = totalInvestment * (config.entryFees / 100);
+  const netShares = totalInvestment * (1 - config.entryFees / 100);
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
-  const monthlyPayment = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
+  const loanPayment = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
+  const insuranceRate = getInsuranceRate(config.borrowerAge);
+  const monthlyInsurance = config.loanAmount * insuranceRate / 100 / 12;
+  const monthlyPayment = loanPayment + monthlyInsurance;
   const loanMonths = config.loanYears * 12;
   const r = config.interestRate / 100 / 12;
   const months = totalYears * 12;
@@ -59,22 +74,23 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
       sharesValue *= (1 + monthlyRevalo);
       if (remainingDebt > 0 && m < loanMonths) {
         const interest = remainingDebt * r;
-        const principal = monthlyPayment - interest;
+        const principal = loanPayment - interest;
         remainingDebt = Math.max(0, remainingDebt - principal);
       } else {
         remainingDebt = 0;
       }
     }
   }
-  const cashflow = (netShares * monthlyRate) - monthlyPayment;
+  const monthlyDividend = netShares * monthlyRate;
+  const cashflow = monthlyDividend - monthlyPayment;
   const totalLoanCost = monthlyPayment * loanMonths - config.loanAmount;
   const finalSharesValue = sharesValue;
   const totalOutOfPocket = config.downPayment + Math.max(0, -cashflow) * Math.min(loanMonths, months);
   return {
     dataPoints, capital: finalSharesValue, totalInvested: totalOutOfPocket,
     grossGains: finalSharesValue - totalOutOfPocket, netGains: finalSharesValue - totalOutOfPocket,
-    perTaxSavings: 0, monthlyPayment, monthlyDividend: netShares * monthlyRate,
-    cashflow, totalLoanCost, netShares,
+    perTaxSavings: 0, distributedDividends: 0, monthlyPayment, monthlyDividend,
+    monthlyInsurance, insuranceRate, cashflow, totalLoanCost, netShares,
   };
 }
 
@@ -106,7 +122,7 @@ export function computePassiveIncome(
   }
   if (scpiCredit.enabled) {
     const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
-    const netShares = totalInvestment;
+    const netShares = totalInvestment * (1 - scpiCredit.entryFees / 100);
     const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
     let sharesValue = netShares;
     const months = years * 12;
@@ -129,10 +145,14 @@ export function computeMonthlyEffort(
   if (av.enabled) effort += av.monthlyContribution;
   if (per.enabled) effort += per.monthlyContribution;
   if (scpiCredit.enabled) {
-    const payment = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+    const loanPay = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+    const insRate = getInsuranceRate(scpiCredit.borrowerAge);
+    const monthlyIns = scpiCredit.loanAmount * insRate / 100 / 12;
+    const totalPayment = loanPay + monthlyIns;
     const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
-    const dividend = totalInvestment * (scpiCredit.rate / 100) / 12;
-    effort += Math.max(0, payment - dividend);
+    const netS = totalInvestment * (1 - scpiCredit.entryFees / 100);
+    const dividend = netS * (scpiCredit.rate / 100) / 12;
+    effort += Math.max(0, totalPayment - dividend);
   }
   return effort;
 }

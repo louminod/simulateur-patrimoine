@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { EnvelopeConfig, SCPICreditConfig, AggregatedResults } from "@/lib/types";
 import { LIVRET_RATE } from "@/lib/constants";
-import { simulate, simulateSCPICredit, simulateLivret, calcLoanPayment } from "@/lib/simulation";
+import { simulate, simulateSCPICredit, simulateLivret, calcLoanPayment, getInsuranceRate } from "@/lib/simulation";
 
 export function useSimulation(
   scpi: EnvelopeConfig,
@@ -20,10 +20,13 @@ export function useSimulation(
     const livretConfigs: { initialCapital: number; monthlyContribution: number }[] = [];
     if (scpi.enabled) livretConfigs.push({ initialCapital: scpi.initialCapital, monthlyContribution: scpi.monthlyContribution });
     if (scpiCredit.enabled) {
-      const payment = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+      const loanPay = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+      const insRate = getInsuranceRate(scpiCredit.borrowerAge);
+      const monthlyIns = scpiCredit.loanAmount * insRate / 100 / 12;
+      const totalPayment = loanPay + monthlyIns;
       const netS = (scpiCredit.loanAmount + scpiCredit.downPayment) * (1 - scpiCredit.entryFees / 100);
       const div = netS * (scpiCredit.rate / 100) / 12;
-      const effort = Math.max(0, payment - div);
+      const effort = Math.max(0, totalPayment - div);
       livretConfigs.push({ initialCapital: scpiCredit.downPayment, monthlyContribution: effort });
     }
     if (av.enabled) livretConfigs.push({ initialCapital: av.initialCapital, monthlyContribution: av.monthlyContribution });
@@ -43,11 +46,14 @@ export function useSimulation(
       // Calculate progressive totalInvested for each active envelope
       if (scpi.enabled) totalInvestedAtMonth += scpi.initialCapital + scpi.monthlyContribution * i;
       if (scpiCredit.enabled) {
-        const payment = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
-        const netS = (scpiCredit.loanAmount + scpiCredit.downPayment) * (1 - scpiCredit.entryFees / 100);
-        const div = netS * (scpiCredit.rate / 100) / 12;
-        const effort = Math.max(0, payment - div);
-        totalInvestedAtMonth += scpiCredit.downPayment + effort * i;
+        const loanPay2 = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
+        const insRate2 = getInsuranceRate(scpiCredit.borrowerAge);
+        const monthlyIns2 = scpiCredit.loanAmount * insRate2 / 100 / 12;
+        const totalPayment2 = loanPay2 + monthlyIns2;
+        const netS2 = (scpiCredit.loanAmount + scpiCredit.downPayment) * (1 - scpiCredit.entryFees / 100);
+        const div2 = netS2 * (scpiCredit.rate / 100) / 12;
+        const effort2 = Math.max(0, totalPayment2 - div2);
+        totalInvestedAtMonth += scpiCredit.downPayment + effort2 * i;
       }
       if (av.enabled) totalInvestedAtMonth += av.initialCapital + av.monthlyContribution * i;
       if (per.enabled) totalInvestedAtMonth += per.initialCapital + per.monthlyContribution * i;

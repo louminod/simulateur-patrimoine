@@ -28,12 +28,14 @@ export function encodeState(state: SimState): string {
     p.set("scci", String(state.scpiCredit.interestRate));
     p.set("sccy", String(state.scpiCredit.loanYears));
     p.set("sccr", String(state.scpiCredit.rate));
+    p.set("scca", String(state.scpiCredit.borrowerAge));
   }
 
   if (state.av.enabled) {
     p.set("av", "1");
     p.set("avi", String(state.av.initialCapital));
     p.set("avm", String(state.av.monthlyContribution));
+    p.set("avmg", String(state.av.mgmtFees));
   }
 
   if (state.per.enabled) {
@@ -41,6 +43,7 @@ export function encodeState(state: SimState): string {
     p.set("peri", String(state.per.initialCapital));
     p.set("perm", String(state.per.monthlyContribution));
     p.set("pert", String(state.per.tmi));
+    p.set("permg", String(state.per.mgmtFees));
   }
 
   return p.toString();
@@ -70,6 +73,7 @@ export function decodeState(search: string): Partial<SimState> | null {
     interestRate: Number(p.get("scci")) || defaultSCPICredit.interestRate,
     loanYears: Number(p.get("sccy")) || defaultSCPICredit.loanYears,
     rate: Number(p.get("sccr")) || defaultSCPICredit.rate,
+    borrowerAge: Number(p.get("scca")) || defaultSCPICredit.borrowerAge,
   };
 
   result.av = {
@@ -77,6 +81,7 @@ export function decodeState(search: string): Partial<SimState> | null {
     enabled: p.get("av") === "1",
     initialCapital: Number(p.get("avi")) || defaultAV.initialCapital,
     monthlyContribution: Number(p.get("avm")) || defaultAV.monthlyContribution,
+    mgmtFees: p.has("avmg") ? Number(p.get("avmg")) : defaultAV.mgmtFees,
   };
 
   result.per = {
@@ -85,6 +90,7 @@ export function decodeState(search: string): Partial<SimState> | null {
     initialCapital: Number(p.get("peri")) || defaultPER.initialCapital,
     monthlyContribution: Number(p.get("perm")) || defaultPER.monthlyContribution,
     tmi: (Number(p.get("pert")) || defaultPER.tmi) as EnvelopeConfig["tmi"],
+    mgmtFees: p.has("permg") ? Number(p.get("permg")) : defaultPER.mgmtFees,
   };
 
   return result;

@@ -5,6 +5,7 @@ export interface EnvelopeConfig {
   rate: number;
   reinvestDividends: boolean;
   entryFees: number;
+  mgmtFees: number;
   jouissanceMonths: number;
   socialCharges: number;
   tmi: number;
@@ -18,6 +19,7 @@ export interface SCPICreditConfig {
   loanYears: number;
   rate: number;
   entryFees: number;
+  borrowerAge: number;
 }
 
 export interface SimResult {
@@ -27,11 +29,14 @@ export interface SimResult {
   grossGains: number;
   netGains: number;
   perTaxSavings: number;
+  distributedDividends: number;
 }
 
 export interface SCPICreditResult extends SimResult {
   monthlyPayment: number;
   monthlyDividend: number;
+  monthlyInsurance: number;
+  insuranceRate: number;
   cashflow: number;
   totalLoanCost: number;
   netShares: number;

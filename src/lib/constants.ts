@@ -15,19 +15,19 @@ export const FEE_COMPARISON_YEARS = 15;
 
 export const defaultSCPI: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 5.5,
-  reinvestDividends: true, entryFees: 10, jouissanceMonths: 3, socialCharges: 0, tmi: 30,
+  reinvestDividends: true, entryFees: 10, mgmtFees: 0, jouissanceMonths: 3, socialCharges: 0, tmi: 30,
 };
 
 export const defaultSCPICredit: SCPICreditConfig = {
-  enabled: true, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 10,
+  enabled: true, loanAmount: 100000, downPayment: 0, interestRate: 5.35, loanYears: 25, rate: 5.5, entryFees: 10, borrowerAge: 30,
 };
 
 export const defaultAV: EnvelopeConfig = {
   enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 4,
-  reinvestDividends: false, entryFees: 4.8, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
+  reinvestDividends: false, entryFees: 4.8, mgmtFees: 1, jouissanceMonths: 0, socialCharges: 17.2, tmi: 30,
 };
 
 export const defaultPER: EnvelopeConfig = {
   enabled: true, initialCapital: 5000, monthlyContribution: 150, rate: 4,
-  reinvestDividends: false, entryFees: 4.8, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
+  reinvestDividends: false, entryFees: 4.8, mgmtFees: 1, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
 };

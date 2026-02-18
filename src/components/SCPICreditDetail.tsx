@@ -21,7 +21,7 @@ function SCPICreditDetailInner({ config, years }: SCPICreditDetailProps) {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mb-4">
         <div><p className="text-xs text-[var(--muted)]">Parts acquises</p><p className="text-lg font-bold">{fmt(cr.netShares)}</p></div>
-        <div><p className="text-xs text-[var(--muted)]">Mensualité crédit</p><p className="text-lg font-bold text-red-400">{fmt(cr.monthlyPayment)}/mois</p></div>
+        <div><p className="text-xs text-[var(--muted)]">Mensualité totale</p><p className="text-lg font-bold text-red-400">{fmt(cr.monthlyPayment)}/mois</p><p className="text-[10px] text-[var(--muted)]">dont {fmt(cr.monthlyInsurance)} assurance ({cr.insuranceRate}%)</p></div>
         <div><p className="text-xs text-[var(--muted)]">Revenus SCPI</p><p className="text-lg font-bold text-[var(--green)]">+{fmt(cr.monthlyDividend)}/mois</p></div>
       </div>
       <div className="bg-[var(--overlay-strong)] rounded-xl p-4 flex flex-col items-center gap-1">

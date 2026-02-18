@@ -3,8 +3,9 @@
 import { memo, useState, useCallback } from "react";
 import { track } from "@vercel/analytics";
 import type { SCPICreditConfig } from "@/lib/types";
-import { calcLoanPayment } from "@/lib/simulation";
+import { calcLoanPayment, getInsuranceRate } from "@/lib/simulation";
 import { fmt } from "@/lib/formatters";
+import { SliderField } from "@/components/ui/SliderField";
 import { CompactField } from "@/components/ui/CompactField";
 import { EnvelopeCardWrapper } from "./EnvelopeCardWrapper";
 
@@ -16,8 +17,11 @@ interface SCPICreditCardProps {
 function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
   const set = useCallback((p: Partial<SCPICreditConfig>) => onChange({ ...config, ...p }), [config, onChange]);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const payment = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
-  const netShares = config.loanAmount + config.downPayment;
+  const loanPay = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
+  const insRate = getInsuranceRate(config.borrowerAge);
+  const monthlyIns = config.loanAmount * insRate / 100 / 12;
+  const payment = loanPay + monthlyIns;
+  const netShares = (config.loanAmount + config.downPayment) * (1 - config.entryFees / 100);
   const monthlyDiv = netShares * (config.rate / 100) / 12;
   const cashflow = monthlyDiv - payment;
 
@@ -36,6 +40,10 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
           <div className="flex justify-between text-xs">
             <span className="text-[var(--muted)]">Mensualité prêt</span>
             <span className="text-[var(--text)] font-medium">{fmt(payment)}/mois</span>
+          </div>
+          <div className="flex justify-between text-xs">
+            <span className="text-[var(--muted)]">Assurance emprunteur</span>
+            <span className="text-[var(--text)] font-medium">{fmt(monthlyIns)}/mois <span className="text-[var(--muted)]">({insRate}%)</span></span>
           </div>
           <div className="flex justify-between text-xs">
             <span className="text-[var(--muted)]">Revenus passifs</span>
@@ -76,6 +84,7 @@ function SCPICreditCardInner({ config, onChange }: SCPICreditCardProps) {
                 ))}
               </div>
             </div>
+            <SliderField label="Âge de l'emprunteur" value={config.borrowerAge} onChange={(v) => set({ borrowerAge: v })} min={25} max={65} suffix=" ans" />
             <div className="bg-[var(--overlay-strong)] rounded-lg p-2.5 space-y-1.5">
               <p className="text-[11px] font-medium text-[var(--muted)]">Frais appliqués</p>
               <div className="flex justify-between text-[10px]">
