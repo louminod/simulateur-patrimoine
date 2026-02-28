@@ -82,7 +82,6 @@ export function useSimulation(
     // ── Aggregates ─────────────────────────────────────────────────────────
     const totalInvested = sims.reduce((s, sim) => s + sim.result.totalInvested, 0);
     const totalFinal = sims.reduce((s, sim) => s + sim.result.capital, 0);
-    const totalNet = sims.reduce((s, sim) => s + sim.result.netGains, 0);
     const perSavings = sims.find((s) => s.type === "per")?.result.perTaxSavings ?? 0;
 
     // ── Passive income from already-computed results ───────────────────────
@@ -92,6 +91,6 @@ export function useSimulation(
     const creditResult = sims.find((s) => s.type === "scpi-credit");
     if (creditResult) passiveIncome += creditResult.result.capital * (scpiCredit.rate / 100) / 12;
 
-    return { sims, livret, chartData, totalInvested, totalFinal, totalNet, perSavings, passiveIncome };
+    return { sims, livret, chartData, totalInvested, totalFinal, perSavings, passiveIncome };
   }, [scpi, scpiCredit, av, per, years]);
 }

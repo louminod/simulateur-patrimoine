@@ -146,16 +146,17 @@ describe("simulate — type SCPI", () => {
     expect(point1).toBeCloseTo(point0, 0); // pas de versement mensuel ici
   });
 
-  it("dividendes non réinvestis → distributedDividends > 0, capital plus faible", () => {
+  it("dividendes non réinvestis → capital final plus faible qu'avec réinvestissement", () => {
     const reinvest = simulate(baseEnvelope({ reinvestDividends: true }), 10, "scpi");
     const noReinvest = simulate(baseEnvelope({ reinvestDividends: false }), 10, "scpi");
-    expect(noReinvest.distributedDividends).toBeGreaterThan(0);
     expect(noReinvest.capital).toBeLessThan(reinvest.capital);
   });
 
-  it("dividendes réinvestis → distributedDividends = 0", () => {
-    const result = simulate(baseEnvelope({ reinvestDividends: true }), 5, "scpi");
-    expect(result.distributedDividends).toBe(0);
+  it("dividendes non réinvestis → grossGains inclut les dividendes distribués (capital + gains = investi + tout)", () => {
+    const noReinvest = simulate(baseEnvelope({ reinvestDividends: false, socialCharges: 0 }), 5, "scpi");
+    // grossGains doit être positif et netGains = grossGains (0% charges)
+    expect(noReinvest.grossGains).toBeGreaterThan(0);
+    expect(noReinvest.netGains).toBe(noReinvest.grossGains);
   });
 });
 

@@ -29,7 +29,6 @@ export interface SimResult {
   grossGains: number;
   netGains: number;
   perTaxSavings: number;
-  distributedDividends: number;
 }
 
 export interface SCPICreditResult extends SimResult {
@@ -38,7 +37,6 @@ export interface SCPICreditResult extends SimResult {
   monthlyInsurance: number;
   insuranceRate: number;
   cashflow: number;
-  totalLoanCost: number;
   netShares: number;
 }
 
@@ -68,7 +66,6 @@ export interface AggregatedResults {
   chartData: Record<string, number | string>[];
   totalInvested: number;
   totalFinal: number;
-  totalNet: number;
   perSavings: number;
   passiveIncome: number;
 }

@@ -113,7 +113,7 @@ export function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "
   const netGains = computeNetGains(grossGains, config.socialCharges);
   const perTaxSavings = type === "per" ? totalInvested * (config.tmi / 100) : 0;
 
-  return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings, distributedDividends };
+  return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings };
 }
 
 export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number): SCPICreditResult {
@@ -151,7 +151,6 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
 
   const monthlyDividend = netShares * monthlyRate;
   const cashflow = monthlyDividend - monthlyPayment;
-  const totalLoanCost = monthlyPayment * loanMonths - config.loanAmount;
   const totalOutOfPocket = config.downPayment + Math.max(0, -cashflow) * Math.min(loanMonths, months);
 
   return {
@@ -161,13 +160,11 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
     grossGains: sharesValue - totalOutOfPocket,
     netGains: sharesValue - totalOutOfPocket,
     perTaxSavings: 0,
-    distributedDividends: 0,
     monthlyPayment,
     monthlyDividend,
     monthlyInsurance,
     insuranceRate,
     cashflow,
-    totalLoanCost,
     netShares,
   };
 }
