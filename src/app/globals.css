@@ -2,24 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #f8f9fb;
-  --card: #ffffff;
-  --card2: #f1f3f5;
-  --border: #e2e4e8;
-  --text: #1a1a2e;
-  --muted: #6b7280;
-  --accent: #6d4de6;
-  --accent2: #0ea5e9;
-  --green: #16a34a;
-  --orange: #ea580c;
-  --tooltip-bg: #ffffff;
-  --grid-opacity: 0.12;
-  --overlay: rgba(0, 0, 0, 0.04);
-  --overlay-strong: rgba(0, 0, 0, 0.08);
+html.dark {
+  --bg: #0a0a12;
+  --card: #111119;
+  --card2: #16161f;
+  --border: #1e1e2e;
+  --text: #e8e8ed;
+  --muted: #8585a0;
+  --accent: #7c5cfc;
+  --accent2: #38bdf8;
+  --green: #34d399;
+  --orange: #fb923c;
+  --tooltip-bg: #16161f;
+  --grid-opacity: 0.03;
+  --overlay: rgba(255, 255, 255, 0.03);
+  --overlay-strong: rgba(255, 255, 255, 0.06);
 }
 
-html.dark {
+:root {
   --bg: #0a0a12;
   --card: #111119;
   --card2: #16161f;
@@ -66,9 +66,6 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(124,92,252,0.5);
 }
-html:not(.dark) input[type="range"]::-webkit-slider-thumb {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
 
 /* Number input hide arrows */
 input[type="number"]::-webkit-outer-spin-button,
@@ -81,9 +78,6 @@ input[type="number"] { -moz-appearance: textfield; }
 /* Animated gradient bg */
 .hero-gradient {
   background: linear-gradient(135deg, rgba(124,92,252,0.15) 0%, rgba(56,189,248,0.1) 50%, rgba(52,211,153,0.08) 100%);
-}
-html:not(.dark) .hero-gradient {
-  background: linear-gradient(135deg, rgba(124,92,252,0.08) 0%, rgba(56,189,248,0.06) 50%, rgba(52,211,153,0.04) 100%);
 }
 
 /* Pulse animation for CTA */
