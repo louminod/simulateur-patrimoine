@@ -28,6 +28,6 @@ export const defaultAV: EnvelopeConfig = {
 };
 
 export const defaultPER: EnvelopeConfig = {
-  enabled: true, initialCapital: 5000, monthlyContribution: 150, rate: 4,
+  enabled: true, initialCapital: 10000, monthlyContribution: 200, rate: 4,
   reinvestDividends: false, entryFees: 4.8, mgmtFees: 1, jouissanceMonths: 0, socialCharges: 0, tmi: 30,
 };
