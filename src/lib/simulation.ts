@@ -1,6 +1,12 @@
 import type { EnvelopeConfig, SCPICreditConfig, SimResult, SCPICreditResult, LivretResult, Milestone } from "./types";
 import { SCPI_REVALUATION, BANK_ENTRY_FEES, BANK_MGMT_FEES, BANK_RATE, SOLUTION_ENTRY_FEES, SOLUTION_MGMT_FEES, SOLUTION_RATE } from "./constants";
 
+// ─── Constants ────────────────────────────────────────────────────────────
+
+const AV_TAX_ADVANTAGE_YEARS = 8;
+
+// ─── Pure financial helpers ───────────────────────────────────────────────
+
 export function calcLoanPayment(principal: number, annualRate: number, years: number): number {
   if (principal <= 0) return 0;
   const r = annualRate / 100 / 12;
@@ -16,45 +22,103 @@ export function getInsuranceRate(age: number): number {
   return 0.70;
 }
 
+// ─── simulate internals ───────────────────────────────────────────────────
+
+interface MonthlyStepParams {
+  capital: number;
+  monthlyRate: number;
+  mgmtFeeMonthly: number;
+  monthlyRevalo: number;
+  reinvestDividends: boolean;
+  type: "scpi" | "av" | "per";
+}
+
+interface MonthlyStepResult {
+  capital: number;
+  dividends: number;
+}
+
+function applyMonthlyStep(params: MonthlyStepParams): MonthlyStepResult {
+  const { type, monthlyRate, mgmtFeeMonthly, monthlyRevalo, reinvestDividends } = params;
+  let { capital } = params;
+  let dividends = 0;
+
+  const gains = capital * monthlyRate;
+
+  if (type === "scpi" && !reinvestDividends) {
+    dividends = gains;
+  } else {
+    capital += gains;
+  }
+
+  if (type === "av" || type === "per") {
+    capital *= (1 - mgmtFeeMonthly);
+  }
+
+  if (type === "scpi") {
+    capital *= (1 + monthlyRevalo);
+  }
+
+  return { capital, dividends };
+}
+
+function applyEntryFees(amount: number, entryFeesPct: number): number {
+  return amount * (1 - entryFeesPct / 100);
+}
+
+function computeNetGains(grossGains: number, socialChargesPct: number): number {
+  if (socialChargesPct <= 0) return grossGains;
+  return grossGains * (1 - socialChargesPct / 100);
+}
+
+// ─── Public simulation functions ──────────────────────────────────────────
+
 export function simulate(config: EnvelopeConfig, years: number, type: "scpi" | "av" | "per"): SimResult {
   const months = years * 12;
   const isAVPER = type === "av" || type === "per";
-  const entryFeeMultiplier = 1 - config.entryFees / 100;
   const mgmtFeeMonthly = isAVPER ? config.mgmtFees / 100 / 12 : 0;
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = type === "scpi" ? SCPI_REVALUATION / 100 / 12 : 0;
-  let capital = config.initialCapital * entryFeeMultiplier;
+
+  let capital = applyEntryFees(config.initialCapital, config.entryFees);
   let totalInvested = config.initialCapital;
   let distributedDividends = 0;
+
   const dataPoints: number[] = [capital];
+
   for (let m = 1; m <= months; m++) {
-    const contribution = config.monthlyContribution * entryFeeMultiplier;
-    capital += contribution;
+    capital += applyEntryFees(config.monthlyContribution, config.entryFees);
     totalInvested += config.monthlyContribution;
-    if (type === "scpi" && m <= config.jouissanceMonths) { dataPoints.push(capital); continue; }
-    const gains = capital * monthlyRate;
-    if (type === "scpi" && !config.reinvestDividends) {
-      // Dividends not reinvested: only revaluation grows capital
-      distributedDividends += gains;
-    } else {
-      capital += gains;
+
+    if (type === "scpi" && m <= config.jouissanceMonths) {
+      dataPoints.push(capital);
+      continue;
     }
-    if (isAVPER) capital *= (1 - mgmtFeeMonthly);
-    if (type === "scpi") capital *= (1 + monthlyRevalo);
+
+    const step = applyMonthlyStep({
+      capital,
+      monthlyRate,
+      mgmtFeeMonthly,
+      monthlyRevalo,
+      reinvestDividends: config.reinvestDividends,
+      type,
+    });
+
+    capital = step.capital;
+    distributedDividends += step.dividends;
     dataPoints.push(capital);
   }
+
   const grossGains = capital + distributedDividends - totalInvested;
-  const netGains = config.socialCharges > 0 ? grossGains * (1 - config.socialCharges / 100) : grossGains;
-  let perTaxSavings = 0;
-  if (type === "per") {
-    perTaxSavings = totalInvested * (config.tmi / 100);
-  }
+  const netGains = computeNetGains(grossGains, config.socialCharges);
+  const perTaxSavings = type === "per" ? totalInvested * (config.tmi / 100) : 0;
+
   return { dataPoints, capital, totalInvested, grossGains, netGains, perTaxSavings, distributedDividends };
 }
 
 export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number): SCPICreditResult {
   const totalInvestment = config.loanAmount + config.downPayment;
-  const netShares = totalInvestment * (1 - config.entryFees / 100);
+  const netShares = applyEntryFees(totalInvestment, config.entryFees);
   const monthlyRate = config.rate / 100 / 12;
   const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
   const loanPayment = calcLoanPayment(config.loanAmount, config.interestRate, config.loanYears);
@@ -64,14 +128,17 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
   const loanMonths = config.loanYears * 12;
   const r = config.interestRate / 100 / 12;
   const months = totalYears * 12;
+
   let remainingDebt = config.loanAmount;
   let sharesValue = netShares;
   const dataPoints: number[] = [];
+
   for (let m = 0; m <= months; m++) {
-    const netCapital = sharesValue - remainingDebt;
-    dataPoints.push(netCapital);
+    dataPoints.push(sharesValue - remainingDebt);
+
     if (m < months) {
       sharesValue *= (1 + monthlyRevalo);
+
       if (remainingDebt > 0 && m < loanMonths) {
         const interest = remainingDebt * r;
         const principal = loanPayment - interest;
@@ -81,31 +148,49 @@ export function simulateSCPICredit(config: SCPICreditConfig, totalYears: number)
       }
     }
   }
+
   const monthlyDividend = netShares * monthlyRate;
   const cashflow = monthlyDividend - monthlyPayment;
   const totalLoanCost = monthlyPayment * loanMonths - config.loanAmount;
-  const finalSharesValue = sharesValue;
   const totalOutOfPocket = config.downPayment + Math.max(0, -cashflow) * Math.min(loanMonths, months);
+
   return {
-    dataPoints, capital: finalSharesValue, totalInvested: totalOutOfPocket,
-    grossGains: finalSharesValue - totalOutOfPocket, netGains: finalSharesValue - totalOutOfPocket,
-    perTaxSavings: 0, distributedDividends: 0, monthlyPayment, monthlyDividend,
-    monthlyInsurance, insuranceRate, cashflow, totalLoanCost, netShares,
+    dataPoints,
+    capital: sharesValue,
+    totalInvested: totalOutOfPocket,
+    grossGains: sharesValue - totalOutOfPocket,
+    netGains: sharesValue - totalOutOfPocket,
+    perTaxSavings: 0,
+    distributedDividends: 0,
+    monthlyPayment,
+    monthlyDividend,
+    monthlyInsurance,
+    insuranceRate,
+    cashflow,
+    totalLoanCost,
+    netShares,
   };
 }
 
-export function simulateLivret(configs: { initialCapital: number; monthlyContribution: number }[], years: number, livretRate: number): LivretResult {
+export function simulateLivret(
+  configs: { initialCapital: number; monthlyContribution: number }[],
+  years: number,
+  livretRate: number,
+): LivretResult {
   const months = years * 12;
   const totalInitial = configs.reduce((s, c) => s + c.initialCapital, 0);
   const totalMonthly = configs.reduce((s, c) => s + c.monthlyContribution, 0);
   const monthlyRate = livretRate / 100 / 12;
+
   let capital = totalInitial;
   const dataPoints: number[] = [capital];
+
   for (let m = 1; m <= months; m++) {
     capital += totalMonthly;
     capital += capital * monthlyRate;
     dataPoints.push(capital);
   }
+
   const totalInvested = totalInitial + totalMonthly * months;
   return { dataPoints, capital, totalInvested, gains: capital - totalInvested };
 }
@@ -116,21 +201,17 @@ export function computePassiveIncome(
   years: number,
 ): number {
   let monthly = 0;
+
   if (scpi.enabled) {
     const scpiResult = simulate(scpi, years, "scpi");
     monthly += scpiResult.capital * (scpi.rate / 100) / 12;
   }
+
   if (scpiCredit.enabled) {
-    const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
-    const netShares = totalInvestment * (1 - scpiCredit.entryFees / 100);
-    const monthlyRevalo = SCPI_REVALUATION / 100 / 12;
-    let sharesValue = netShares;
-    const months = years * 12;
-    for (let m = 0; m < months; m++) {
-      sharesValue *= (1 + monthlyRevalo);
-    }
-    monthly += sharesValue * (scpiCredit.rate / 100) / 12;
+    const creditResult = simulateSCPICredit(scpiCredit, years);
+    monthly += creditResult.capital * (scpiCredit.rate / 100) / 12;
   }
+
   return monthly;
 }
 
@@ -141,19 +222,22 @@ export function computeMonthlyEffort(
   per: EnvelopeConfig,
 ): number {
   let effort = 0;
+
   if (scpi.enabled) effort += scpi.monthlyContribution;
   if (av.enabled) effort += av.monthlyContribution;
   if (per.enabled) effort += per.monthlyContribution;
+
   if (scpiCredit.enabled) {
     const loanPay = calcLoanPayment(scpiCredit.loanAmount, scpiCredit.interestRate, scpiCredit.loanYears);
     const insRate = getInsuranceRate(scpiCredit.borrowerAge);
     const monthlyIns = scpiCredit.loanAmount * insRate / 100 / 12;
     const totalPayment = loanPay + monthlyIns;
     const totalInvestment = scpiCredit.loanAmount + scpiCredit.downPayment;
-    const netS = totalInvestment * (1 - scpiCredit.entryFees / 100);
+    const netS = applyEntryFees(totalInvestment, scpiCredit.entryFees);
     const dividend = netS * (scpiCredit.rate / 100) / 12;
     effort += Math.max(0, totalPayment - dividend);
   }
+
   return effort;
 }
 
@@ -162,23 +246,20 @@ export function simulateFeeCurves(
   monthlyContribution: number,
   years: number,
 ): { bankCurve: number[]; solutionCurve: number[] } {
-  const simulateCurve = (
-    entryFeesPct: number,
-    mgmtFeesPct: number,
-    ratePct: number,
-  ): number[] => {
+  const simulateCurve = (entryFeesPct: number, mgmtFeesPct: number, ratePct: number): number[] => {
     const months = years * 12;
     const monthlyRate = ratePct / 100 / 12;
     const mgmtMonthly = mgmtFeesPct / 100 / 12;
-    let capital = initialCapital * (1 - entryFeesPct / 100);
+    let capital = applyEntryFees(initialCapital, entryFeesPct);
     const points: number[] = [capital];
+
     for (let m = 1; m <= months; m++) {
-      const contrib = monthlyContribution * (1 - entryFeesPct / 100);
-      capital += contrib;
+      capital += applyEntryFees(monthlyContribution, entryFeesPct);
       capital += capital * monthlyRate;
       capital *= (1 - mgmtMonthly);
       points.push(capital);
     }
+
     return points;
   };
 
@@ -193,6 +274,7 @@ export function computeMilestones(
   av: EnvelopeConfig,
 ): Milestone[] {
   const milestones: Milestone[] = [];
+
   if (scpiCredit.enabled) {
     milestones.push({
       month: scpiCredit.loanYears * 12,
@@ -200,12 +282,14 @@ export function computeMilestones(
       color: "#c084fc",
     });
   }
+
   if (av.enabled) {
     milestones.push({
-      month: 8 * 12,
+      month: AV_TAX_ADVANTAGE_YEARS * 12,
       label: "Fiscalité AV avantageuse",
       color: "#38bdf8",
     });
   }
+
   return milestones;
 }
