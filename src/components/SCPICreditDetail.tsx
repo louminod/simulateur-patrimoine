@@ -1,18 +1,16 @@
 "use client";
 
-import { memo, useMemo } from "react";
-import type { SCPICreditConfig } from "@/lib/types";
-import { simulateSCPICredit } from "@/lib/simulation";
+import { memo } from "react";
+import type { SCPICreditConfig, SCPICreditResult } from "@/lib/types";
 import { fmt } from "@/lib/formatters";
 
 interface SCPICreditDetailProps {
   config: SCPICreditConfig;
+  result: SCPICreditResult;
   years: number;
 }
 
-function SCPICreditDetailInner({ config, years }: SCPICreditDetailProps) {
-  const cr = useMemo(() => simulateSCPICredit(config, years), [config, years]);
-
+function SCPICreditDetailInner({ config, result: cr, years }: SCPICreditDetailProps) {
   return (
     <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/20 p-6 mb-8">
       <div className="flex items-center gap-2 mb-4">

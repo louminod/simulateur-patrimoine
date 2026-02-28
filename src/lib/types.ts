@@ -70,4 +70,5 @@ export interface AggregatedResults {
   totalFinal: number;
   totalNet: number;
   perSavings: number;
+  passiveIncome: number;
 }

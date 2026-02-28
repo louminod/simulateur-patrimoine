@@ -5,7 +5,8 @@ import { track } from "@vercel/analytics";
 import { defaultSCPI, defaultSCPICredit, defaultAV, defaultPER } from "@/lib/constants";
 import { encodeState, decodeState } from "@/lib/shareUrl";
 import { useSimulation } from "@/hooks/useSimulation";
-import { computePassiveIncome, computeMonthlyEffort, computeMilestones } from "@/lib/simulation";
+import { computeMonthlyEffort, computeMilestones } from "@/lib/simulation";
+import type { SCPICreditResult } from "@/lib/types";
 import { Hero } from "@/components/Hero";
 import { HorizonSlider } from "@/components/HorizonSlider";
 import { SCPICashCard, SCPICreditCard, AVCard, PERCard } from "@/components/EnvelopeCards";
@@ -42,7 +43,7 @@ export default function Home() {
 
   const results = useSimulation(scpi, scpiCredit, av, per, years);
 
-  const passiveIncome = useMemo(() => computePassiveIncome(scpi, scpiCredit, years), [scpi, scpiCredit, years]);
+  const passiveIncome = results.passiveIncome;
   const monthlyEffort = useMemo(() => computeMonthlyEffort(scpi, scpiCredit, av, per), [scpi, scpiCredit, av, per]);
   const milestones = useMemo(() => computeMilestones(scpiCredit, av), [scpiCredit, av]);
 
@@ -66,7 +67,13 @@ export default function Home() {
         </div>
       </section>
 
-      {scpiCredit.enabled && <SCPICreditDetail config={scpiCredit} years={years} />}
+      {scpiCredit.enabled && (
+        <SCPICreditDetail
+          config={scpiCredit}
+          result={results.sims.find((s) => s.type === "scpi-credit")!.result as SCPICreditResult}
+          years={years}
+        />
+      )}
 
       <ResultSummary monthlyEffort={monthlyEffort} totalFinal={results.totalFinal} monthlyIncome={passiveIncome} hasCreditSCPI={scpiCredit.enabled} />
 
